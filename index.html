@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ノルチケ チャンスメーター</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap');
+:root {
+  --bg:#0a0a0f; --surface:#12121a; --border:#1e1e2e;
+  --accent:#ff3c6e; --accent2:#ffb547; --accent3:#4af0c4;
+  --text:#f0eeff; --muted:#6b6b8a;
+  --safe:#4af0c4; --warn:#ffb547; --danger:#ff3c6e;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:32px 16px 60px;
+  background-image:
+    radial-gradient(ellipse at 20% 10%,rgba(255,60,110,0.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,rgba(74,240,196,0.06) 0%,transparent 50%);
+}
+header{text-align:center;margin-bottom:40px;}
+.title-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
+h1{font-size:clamp(26px,6vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1;}
+h1 span{color:var(--accent);}
+.subtitle{margin-top:8px;font-size:13px;color:var(--muted);font-weight:300;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px;width:100%;max-width:480px;margin-bottom:20px;overflow:hidden;}
+.card-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
+.input-row{display:flex;flex-direction:column;gap:12px;}
+label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block;}
+input[type="date"],input[type="time"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 8px;outline:none;transition:border-color 0.2s;color-scheme:dark;min-width:0;}
+input[type="date"]:focus,input[type="time"]:focus{border-color:var(--accent);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0;}
+.btn{width:100%;max-width:480px;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:16px;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s,transform 0.1s;margin-bottom:24px;}
+.btn:hover{opacity:0.85;}
+.btn:active{transform:scale(0.98);}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;width:100%;max-width:480px;display:none;animation:fadeUp 0.4s ease;}
+.result-card.show{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.phase-badge{display:inline-block;padding:4px 14px;border-radius:999px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:16px;}
+.phase-free{background:rgba(74,240,196,0.15);color:var(--safe);border:1px solid var(--safe);}
+.phase-flat{background:rgba(255,181,71,0.12);color:var(--warn);border:1px solid var(--warn);}
+.phase-10{background:rgba(255,181,71,0.18);color:var(--warn);border:1px solid var(--warn);}
+.phase-20{background:rgba(255,90,60,0.15);color:#ff8060;border:1px solid #ff8060;}
+.phase-30{background:rgba(255,60,110,0.18);color:var(--danger);border:1px solid var(--danger);}
+.phase-closed{background:rgba(100,100,130,0.18);color:var(--muted);border:1px solid var(--muted);}
+.result-title{font-size:22px;font-weight:900;margin-bottom:6px;line-height:1.3;}
+.result-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+.meter-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.meter-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 14px 12px;}
+.meter-box-label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:8px;}
+.meter-box-score{font-size:36px;font-weight:900;font-family:'Space Mono',monospace;line-height:1;margin-bottom:8px;}
+.meter-box-track{width:100%;height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:4px;}
+.meter-box-fill{height:100%;border-radius:999px;transition:width 0.9s cubic-bezier(0.16,1,0.3,1);}
+.meter-box-sub{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px;}
+.zensin-flow{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;}
+.zensin-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px;}
+.zensin-text{font-size:12px;color:var(--muted);line-height:1.7;}
+.zensin-text strong{color:var(--accent3);font-weight:700;}
+.zensin-arrow{display:flex;align-items:center;gap:6px;font-size:11px;font-family:'Space Mono',monospace;color:var(--accent3);margin-top:8px;flex-wrap:wrap;}
+.ztag{background:rgba(74,240,196,0.1);border:1px solid rgba(74,240,196,0.3);border-radius:4px;padding:2px 7px;}
+.zarr{color:var(--muted);font-size:10px;}
+.next-phase-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;}
+.next-phase-label{font-size:11px;color:var(--muted);letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:8px;}
+.next-phase-info{font-size:14px;font-weight:700;color:var(--accent2);}
+.next-phase-date{font-family:'Space Mono',monospace;font-size:13px;color:var(--text);margin-top:4px;}
+.next-phase-days{margin-top:8px;font-size:28px;font-weight:900;font-family:'Space Mono',monospace;color:var(--accent2);line-height:1;}
+.next-phase-days span{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;}
+.timeline{display:flex;flex-direction:column;}
+.tl-item{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);opacity:0.5;transition:opacity 0.2s;}
+.tl-item:last-child{border-bottom:none;}
+.tl-item.active{opacity:1;}
+.tl-item.past{opacity:0.3;}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;background:var(--border);}
+.tl-item.active .tl-dot{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+.tl-item.past .tl-dot{background:var(--muted);}
+.tl-content{flex:1;}
+.tl-fee{font-weight:700;font-size:13px;}
+.tl-date{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px;}
+.seat-hint{font-size:12px;color:var(--muted);line-height:1.7;padding:12px;background:rgba(255,60,110,0.05);border-left:2px solid var(--accent);border-radius:4px;margin-top:16px;}
+.sec-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-label">ノルチケ戦略ツール</div>
+  <h1>キャンセル<span>チャンス</span>メーター</h1>
+  <p class="subtitle">フェーズ切り替え直前ほど良席が出やすい</p>
+</header>
+
+<div class="card">
+  <div class="card-title">公演情報を入力</div>
+  <div class="input-row">
+    <div>
+      <label>公演日</label>
+      <input type="date" id="concert-date">
+    </div>
+    <div class="two-col">
+      <div>
+        <label>公演開始時刻</label>
+        <input type="time" id="concert-time" value="18:00">
+      </div>
+      <div>
+        <label>チケッティング日</label>
+        <input type="date" id="check-date">
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn" onclick="calculate()">チャンスを確認する</button>
+
+<div class="result-card" id="result"></div>
+
+<script>
+var PHASES = [
+  { key:'closed', color:'phase-closed', chance:0,  label:'終了' },
+  { key:'p30',    color:'phase-30',     chance:95, label:'30% フェーズ' },
+  { key:'p20',    color:'phase-20',     chance:75, label:'20% フェーズ' },
+  { key:'p10',    color:'phase-10',     chance:50, label:'10% フェーズ' },
+  { key:'flat',   color:'phase-flat',   chance:25, label:'均一フェーズ' },
+  { key:'free',   color:'phase-free',   chance:5,  label:'無料期間' }
+];
+
+function getPhase(days) {
+  if (days < 2)  return PHASES[0];
+  if (days < 3)  return PHASES[1];
+  if (days < 7)  return PHASES[2];
+  if (days < 10) return PHASES[3];
+  if (days < 35) return PHASES[4];
+  return PHASES[5];
+}
+
+function nextPhaseKey(key) {
+  var order = ['free','flat','p10','p20','p30','closed'];
+  var i = order.indexOf(key);
+  return (i >= 0 && i < order.length - 1) ? order[i+1] : null;
+}
+
+function nextCutoffDays(key) {
+  var map = { free:35, flat:10, p10:7, p20:3, p30:2 };
+  return map[key] || null;
+}
+
+function phaseNameFromKey(key) {
+  var map = { free:'無料', flat:'均一 4,000won', p10:'10%', p20:'20%', p30:'30%', closed:'終了' };
+  return map[key] || key;
+}
+
+function fmtDate(d) {
+  return d.getFullYear() + '/' +
+    String(d.getMonth()+1).padStart(2,'0') + '/' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function getColor(c) {
+  if (c >= 80) return '#ff3c6e';
+  if (c >= 50) return '#ff8060';
+  if (c >= 25) return '#ffb547';
+  return '#4af0c4';
+}
+
+function el(tag, cls, html, style) {
+  var d = document.createElement(tag);
+  if (cls)   d.className = cls;
+  if (html)  d.innerHTML = html;
+  if (style) d.setAttribute('style', style);
+  return d;
+}
+
+function calculate() {
+  var cds = document.getElementById('concert-date').value;
+  var cts = document.getElementById('concert-time').value;
+  var kds = document.getElementById('check-date').value;
+
+  if (!cds || !kds) { alert('公演日とチェック日を入力してください'); return; }
+
+  var concertDate = new Date(cds + 'T' + cts + ':00');
+  var checkDate   = new Date(kds + 'T00:00:00');
+  var days = Math.ceil((concertDate - checkDate) / 86400000);
+  var phase = getPhase(days);
+  var c = phase.chance;
+  var mc = getColor(c);
+  var nKey = nextPhaseKey(phase.key);
+  var nCutDays = nextCutoffDays(phase.key);
+
+  var nDate = null;
+  var daysUntilNext = null;
+  if (nCutDays !== null) {
+    nDate = new Date(concertDate.getTime());
+    nDate.setDate(nDate.getDate() - nCutDays + 1);
+    daysUntilNext = Math.ceil((nDate - checkDate) / 86400000);
+  }
+
+  var result = document.getElementById('result');
+  result.innerHTML = '';
+  result.classList.add('show');
+
+  // Header
+  result.appendChild(el('div','card-title','分析結果'));
+  result.appendChild(el('div','phase-badge ' + phase.color, phase.label));
+  var daysLabel = days > 0 ? (days + '日前') : (days === 0 ? '当日' : '終了後');
+  result.appendChild(el('div','result-title','公演 ' + daysLabel));
+  result.appendChild(el('div','result-sub','チェック日: ' + fmtDate(checkDate) + '　|　公演日: ' + fmtDate(concertDate)));
+
+  // Meter grid
+  var grid = el('div','meter-grid');
+
+  // Good seat meter
+  var box1 = el('div','meter-box');
+  box1.appendChild(el('div','meter-box-label','良席チャンス'));
+  var sc1 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + mc);
+  sc1.id = 'score-good';
+  box1.appendChild(sc1);
+  var tr1 = el('div','meter-box-track');
+  var fill1 = el('div','meter-box-fill','','width:0%;background:' + mc);
+  fill1.id = 'meter-good';
+  tr1.appendChild(fill1);
+  box1.appendChild(tr1);
+  box1.appendChild(el('div','meter-box-sub','代行業者が損切りで<br>良席を手放すタイミング'));
+  grid.appendChild(box1);
+
+  // Zensin meter
+  var box2 = el('div','meter-box');
+  box2.appendChild(el('div','meter-box-label','一般席チャンス'));
+  var sc2 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + mc);
+  sc2.id = 'score-zensin';
+  box2.appendChild(sc2);
+  var tr2 = el('div','meter-box-track');
+  var fill2 = el('div','meter-box-fill','','width:0%;background:' + mc);
+  fill2.id = 'meter-zensin';
+  tr2.appendChild(fill2);
+  box2.appendChild(tr2);
+  box2.appendChild(el('div','meter-box-sub','前進狙いの人が<br>イマイチな席を手放す'));
+  grid.appendChild(box2);
+
+  result.appendChild(grid);
+
+  // Zensin flow explanation
+  var flow = el('div','zensin-flow');
+  flow.appendChild(el('div','zensin-icon','&#9875;&#65039;'));
+  var zt = el('div','zensin-text');
+  zt.innerHTML = '<strong>前進（チョンジン）とは？</strong><br>' +
+    'より良い席が出たタイミングで、今持っている席を手放して前の席に移ること。' +
+    'これにより、イマイチな席が市場に流れ、<strong style="color:#ff3c6e">チケットを持っていない人にチャンスが生まれます。</strong>';
+  var arrow = el('div','zensin-arrow');
+  ['業者が良席を放出','前進狙いの人が今の席をキャンセル','あなたがその席を拾える！'].forEach(function(t, i, arr) {
+    arrow.appendChild(el('span','ztag',t));
+    if (i < arr.length - 1) arrow.appendChild(el('span','zarr','&#8594;'));
+  });
+  zt.appendChild(arrow);
+  flow.appendChild(zt);
+  result.appendChild(flow);
+
+  // Next phase box
+  var npBox = el('div','next-phase-box');
+  if (nDate && daysUntilNext !== null) {
+    npBox.appendChild(el('div','next-phase-label','次のフェーズ切り替えまで'));
+    npBox.appendChild(el('div','next-phase-info','&#8594; ' + phaseNameFromKey(nKey || '') + 'フェーズへ'));
+    npBox.appendChild(el('div','next-phase-date', fmtDate(nDate) + ' 〜'));
+    npBox.appendChild(el('div','next-phase-days', daysUntilNext + '<span>日後</span>'));
+  } else {
+    npBox.style.opacity = '0.5';
+    npBox.appendChild(el('div','next-phase-label','次のフェーズ'));
+    npBox.appendChild(el('div','next-phase-info','なし（最終フェーズ）'));
+  }
+  result.appendChild(npBox);
+
+  // Timeline
+  result.appendChild(el('div','sec-title','キャンセルフェーズ タイムライン'));
+  var tl = el('div','timeline');
+  var tlData = [
+    { key:'free',   label:'無料キャンセル',    fee:'無料',         dm:35 },
+    { key:'flat',   label:'均一フェーズ開始',  fee:'4,000won/枚',  dm:10 },
+    { key:'p10',    label:'10%フェーズ開始',   fee:'10%',          dm:7  },
+    { key:'p20',    label:'20%フェーズ開始',   fee:'20%',          dm:3  },
+    { key:'p30',    label:'30%フェーズ（直前）',fee:'30%',         dm:2  },
+    { key:'closed', label:'キャンセル締切',     fee:'受付終了',     dm:0  }
+  ];
+  tlData.forEach(function(item) {
+    var d = new Date(concertDate.getTime());
+    d.setDate(d.getDate() - item.dm);
+    var isPast   = days < item.dm;
+    var isActive = phase.key === item.key;
+    var row = el('div','tl-item' + (isActive ? ' active' : isPast ? ' past' : ''));
+    row.appendChild(el('div','tl-dot'));
+    var cnt = el('div','tl-content');
+    cnt.appendChild(el('div','tl-fee', item.fee + ' <span style="font-weight:300;font-size:11px;color:#6b6b8a">' + item.label + '</span>'));
+    cnt.appendChild(el('div','tl-date', fmtDate(d) + '〜 (公演' + item.dm + '日前)'));
+    row.appendChild(cnt);
+    tl.appendChild(row);
+  });
+  result.appendChild(tl);
+
+  // Seat hint
+  var hints = {
+    free:   'まだ早い。良席放出はフェーズ後半から。',
+    flat:   '代行業者が均一損失を避け始める時期。たまにポツポツ出ることも。',
+    p10:    'チャンス増加中。10%より高い損失を避けたい人が動き始める。',
+    p20:    '要注意フェーズ。20%→30%に跨ぐ前に放出が増える。ノルチケ本番！',
+    p30:    '直前ピーク！最大損失を避けたい業者が良席を一気に放出。張り付き推奨。',
+    closed: 'キャンセル受付終了。チャンスなし。'
+  };
+  result.appendChild(el('div','seat-hint', hints[phase.key] || ''));
+
+  // Animate meters
+  setTimeout(function() {
+    document.getElementById('meter-good').style.width = c + '%';
+    document.getElementById('meter-zensin').style.width = c + '%';
+    var startTime = performance.now();
+    function countUp(now) {
+      var elapsed = now - startTime;
+      var progress = Math.min(elapsed / 800, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var val = Math.round(eased * c);
+      var suffix = '<span style="font-size:16px;font-weight:400">%</span>';
+      document.getElementById('score-good').innerHTML = val + suffix;
+      document.getElementById('score-zensin').innerHTML = val + suffix;
+      if (progress < 1) requestAnimationFrame(countUp);
+    }
+    requestAnimationFrame(countUp);
+  }, 100);
+
+  result.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// Default: today
+(function() {
+  var t = new Date();
+  var s = t.getFullYear() + '-' +
+    String(t.getMonth()+1).padStart(2,'0') + '-' +
+    String(t.getDate()).padStart(2,'0');
+  document.getElementById('check-date').value = s;
+}());
+
+function downloadHTML() {
+  var html = document.documentElement.outerHTML;
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'noru-ticket.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+
+<div style="text-align:center;margin-top:8px;">
+  <button onclick="downloadHTML()" style="
+    background:transparent;
+    border:1px solid #1e1e2e;
+    color:#6b6b8a;
+    border-radius:8px;
+    padding:10px 20px;
+    font-family:'Noto Sans JP',sans-serif;
+    font-size:12px;
+    cursor:pointer;
+    letter-spacing:1px;
+    transition:border-color 0.2s,color 0.2s;
+  "
+  onmouseover="this.style.borderColor='#4af0c4';this.style.color='#4af0c4';"
+  onmouseout="this.style.borderColor='#1e1e2e';this.style.color='#6b6b8a';"
+  >&#8595; HTMLファイルをダウンロード</button>
+</div>
+
+</body>
+</html>
