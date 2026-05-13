@@ -57,6 +57,13 @@ input[type="date"]:focus,input[type="time"]:focus{border-color:var(--accent);}
 .meter-box-track{width:100%;height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:4px;}
 .meter-box-fill{height:100%;border-radius:999px;transition:width 0.9s cubic-bezier(0.16,1,0.3,1);}
 .meter-box-sub{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px;}
+.breakdown{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;}
+.breakdown-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:9px 0;font-size:12px;color:var(--muted);}
+.breakdown-row:last-child{border-bottom:none;}
+.breakdown-row strong{font-family:'Space Mono',monospace;font-size:15px;color:var(--text);}
+.breakdown-row .boost{color:var(--accent2);}
+.boost-callout{font-size:12px;color:var(--muted);line-height:1.7;padding:12px;background:rgba(255,181,71,0.07);border-left:2px solid var(--accent2);border-radius:4px;margin-top:12px;}
 .zensin-flow{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;}
 .zensin-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px;}
 .zensin-text{font-size:12px;color:var(--muted);line-height:1.7;}
@@ -90,7 +97,7 @@ input[type="date"]:focus,input[type="time"]:focus{border-color:var(--accent);}
 <header>
   <div class="title-label">ノルチケ戦略ツール</div>
   <h1>キャンセル<span>チャンス</span>メーター</h1>
-  <p class="subtitle">フェーズ切り替え直前ほど良席が出やすい</p>
+  <p class="subtitle">フェーズ切り替え直前ほど放出圧が上がる</p>
 </header>
 
 <div class="card">
@@ -120,14 +127,15 @@ input[type="date"]:focus,input[type="time"]:focus{border-color:var(--accent);}
 
 <script>
 var MS_DAY = 86400000;
+var MS_HOUR = 3600000;
 
 var PHASES = [
-  { key:'closed', color:'phase-closed', chance:0,  label:'終了' },
-  { key:'p30',    color:'phase-30',     chance:95, label:'30% フェーズ' },
-  { key:'p20',    color:'phase-20',     chance:75, label:'20% フェーズ' },
-  { key:'p10',    color:'phase-10',     chance:50, label:'10% フェーズ' },
-  { key:'flat',   color:'phase-flat',   chance:25, label:'均一フェーズ' },
-  { key:'free',   color:'phase-free',   chance:5,  label:'無料期間' }
+  { key:'closed', color:'phase-closed', baseChance:0,  label:'終了' },
+  { key:'p30',    color:'phase-30',     baseChance:70, label:'30% フェーズ' },
+  { key:'p20',    color:'phase-20',     baseChance:55, label:'20% フェーズ' },
+  { key:'p10',    color:'phase-10',     baseChance:35, label:'10% フェーズ' },
+  { key:'flat',   color:'phase-flat',   baseChance:15, label:'均一フェーズ' },
+  { key:'free',   color:'phase-free',   baseChance:5,  label:'無料期間' }
 ];
 
 function phaseByKey(key) {
@@ -185,6 +193,32 @@ function getNextPhaseInfo(key, concertDate) {
   return { key:info.key, date:date };
 }
 
+function getLastMinuteBoost(checkDateTime, nextInfo) {
+  if (!nextInfo || !nextInfo.date || checkDateTime >= nextInfo.date) return 0;
+  var hours = (nextInfo.date - checkDateTime) / MS_HOUR;
+  if (hours <= 1) return 40;
+  if (hours <= 3) return 30;
+  if (hours <= 6) return 20;
+  if (hours <= 12) return 10;
+  return 0;
+}
+
+function getBoostMessage(boost, nextInfo) {
+  if (!nextInfo || boost === 0) {
+    return '次の手数料アップ／締切まではまだ余裕があります。現在はフェーズ基本値を中心に見ています。';
+  }
+  if (boost >= 40) {
+    return '切り替え直前です。損切り判断による在庫放出が最も起こりやすいと仮定しています。';
+  }
+  if (boost >= 30) {
+    return 'かなり直前です。次フェーズに上がる前に手放す動きが出やすい時間帯です。';
+  }
+  if (boost >= 20) {
+    return '直前帯に入っています。手数料アップ前のキャンセル戻りに注意したい時間です。';
+  }
+  return '次フェーズが近づいています。少しずつ直前放出ブーストがかかり始めています。';
+}
+
 function phaseNameFromKey(key) {
   var map = { free:'無料', flat:'均一 4,000won', p10:'10%', p20:'20%', p30:'30%', closed:'受付終了' };
   return map[key] || key;
@@ -204,8 +238,8 @@ function fmtRemaining(from, to) {
   var diff = to - from;
   if (diff <= 0) return 'まもなく';
   var days = Math.floor(diff / MS_DAY);
-  var hours = Math.floor((diff % MS_DAY) / 3600000);
-  var mins = Math.floor((diff % 3600000) / 60000);
+  var hours = Math.floor((diff % MS_DAY) / MS_HOUR);
+  var mins = Math.floor((diff % MS_HOUR) / 60000);
   if (days > 0) return days + '<span>日後</span>';
   if (hours > 0) return hours + '<span>時間後</span>';
   return Math.max(mins, 1) + '<span>分後</span>';
@@ -239,9 +273,11 @@ function calculate() {
   var deadlineDateTime = getCancellationDeadline(concertDate);
   var days = getDaysBefore(concertDate, checkDate);
   var phase = getPhase(days, checkDateTime, deadlineDateTime);
-  var c = phase.chance;
-  var mc = getColor(c);
   var nextInfo = getNextPhaseInfo(phase.key, concertDate);
+  var baseChance = phase.baseChance;
+  var boostChance = phase.key === 'closed' ? 0 : getLastMinuteBoost(checkDateTime, nextInfo);
+  var totalChance = Math.min(100, baseChance + boostChance);
+  var mc = getColor(totalChance);
 
   var result = document.getElementById('result');
   result.innerHTML = '';
@@ -256,7 +292,7 @@ function calculate() {
   var grid = el('div','meter-grid');
 
   var box1 = el('div','meter-box');
-  box1.appendChild(el('div','meter-box-label','良席チャンス'));
+  box1.appendChild(el('div','meter-box-label','戻り席チャンス'));
   var sc1 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + mc);
   sc1.id = 'score-good';
   box1.appendChild(sc1);
@@ -265,32 +301,40 @@ function calculate() {
   fill1.id = 'meter-good';
   tr1.appendChild(fill1);
   box1.appendChild(tr1);
-  box1.appendChild(el('div','meter-box-sub','損切りで<br>良席が戻るタイミング'));
+  box1.appendChild(el('div','meter-box-sub','基本フェーズ値に<br>直前放出ブーストを加算'));
   grid.appendChild(box1);
 
   var box2 = el('div','meter-box');
-  box2.appendChild(el('div','meter-box-label','一般席チャンス'));
-  var sc2 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + mc);
-  sc2.id = 'score-zensin';
+  box2.appendChild(el('div','meter-box-label','直前放出ブースト'));
+  var sc2 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + getColor(boostChance));
+  sc2.id = 'score-boost';
   box2.appendChild(sc2);
   var tr2 = el('div','meter-box-track');
-  var fill2 = el('div','meter-box-fill','','width:0%;background:' + mc);
-  fill2.id = 'meter-zensin';
+  var fill2 = el('div','meter-box-fill','','width:0%;background:' + getColor(boostChance));
+  fill2.id = 'meter-boost';
   tr2.appendChild(fill2);
   box2.appendChild(tr2);
-  box2.appendChild(el('div','meter-box-sub','前進狙いの人が<br>今の席を手放す'));
+  box2.appendChild(el('div','meter-box-sub','次の手数料アップ／<br>締切直前ほど上昇'));
   grid.appendChild(box2);
 
   result.appendChild(grid);
 
+  var breakdown = el('div','breakdown');
+  breakdown.appendChild(el('div','breakdown-title','Chance Breakdown'));
+  breakdown.appendChild(el('div','breakdown-row','<span>基本フェーズ値</span><strong>' + baseChance + '%</strong>'));
+  breakdown.appendChild(el('div','breakdown-row','<span>直前放出ブースト</span><strong class="boost">+' + boostChance + '%</strong>'));
+  breakdown.appendChild(el('div','breakdown-row','<span>総合チャンス</span><strong style="color:' + mc + '">' + totalChance + '%</strong>'));
+  breakdown.appendChild(el('div','boost-callout', getBoostMessage(boostChance, nextInfo)));
+  result.appendChild(breakdown);
+
   var flow = el('div','zensin-flow');
   flow.appendChild(el('div','zensin-icon','&#9875;&#65039;'));
   var zt = el('div','zensin-text');
-  zt.innerHTML = '<strong>前進（チョンジン）とは？</strong><br>' +
-    'より良い席が出るタイミングで、今持っている席を手放して前の席に移ること。' +
-    'これにより、キャンセルされた席がノルチケに戻り、<strong style="color:#ff3c6e">チケットを持っていない人にチャンスが生まれます。</strong>';
+  zt.innerHTML = '<strong>直前放出ブーストとは？</strong><br>' +
+    '次の手数料アップやキャンセル締切の直前は、代行業者や保有者が損失を避けるために在庫を手放しやすいと仮定しています。' +
+    '<strong style="color:#ff3c6e">この直前帯を、総合チャンスに上乗せして表示します。</strong>';
   var arrow = el('div','zensin-arrow');
-  ['良席が戻る','前進狙いの人が今の席をキャンセル','あなたがその席を拾える！'].forEach(function(t, i, arr) {
+  ['手数料アップが近づく','損切り判断が起こる','戻り席が出やすくなる'].forEach(function(t, i, arr) {
     arrow.appendChild(el('span','ztag',t));
     if (i < arr.length - 1) arrow.appendChild(el('span','zarr','&#8594;'));
   });
@@ -343,27 +387,28 @@ function calculate() {
   result.appendChild(tl);
 
   var hints = {
-    free:   'まだ早い。良席放出はフェーズ後半から。',
-    flat:   '均一手数料を避けたい人が動き始める時期。たまにポツポツ出ることも。',
-    p10:    'チャンス増加中。10%より高い損失を避けたい人が動き始める。',
-    p20:    '要注意フェーズ。20%→30%に跨ぐ前に放出が増える。ノルチケ本番！',
+    free:   'まだ早い。良席放出はフェーズ後半から。次のフェーズが近づくと少しずつ注視度が上がります。',
+    flat:   '均一手数料を避けたい人が動き始める時期。10%フェーズ直前は戻り席に注意。',
+    p10:    'チャンス増加中。20%に上がる直前は、損失を避けたい人のキャンセル判断が出やすい時間帯です。',
+    p20:    '要注意フェーズ。30%に跨ぐ直前は、代行業者や保有者の損切り放出が起こりやすい想定です。',
     p30:    '直前ピーク！締切前の最終判断で戻りが出やすい時間帯。張り付き推奨。',
     closed: 'キャンセル受付終了。チャンスなし。'
   };
   result.appendChild(el('div','seat-hint', hints[phase.key] || ''));
 
   setTimeout(function() {
-    document.getElementById('meter-good').style.width = c + '%';
-    document.getElementById('meter-zensin').style.width = c + '%';
+    document.getElementById('meter-good').style.width = totalChance + '%';
+    document.getElementById('meter-boost').style.width = boostChance + '%';
     var startTime = performance.now();
     function countUp(now) {
       var elapsed = now - startTime;
       var progress = Math.min(elapsed / 800, 1);
       var eased = 1 - Math.pow(1 - progress, 3);
-      var val = Math.round(eased * c);
+      var valTotal = Math.round(eased * totalChance);
+      var valBoost = Math.round(eased * boostChance);
       var suffix = '<span style="font-size:16px;font-weight:400">%</span>';
-      document.getElementById('score-good').innerHTML = val + suffix;
-      document.getElementById('score-zensin').innerHTML = val + suffix;
+      document.getElementById('score-good').innerHTML = valTotal + suffix;
+      document.getElementById('score-boost').innerHTML = valBoost + suffix;
       if (progress < 1) requestAnimationFrame(countUp);
     }
     requestAnimationFrame(countUp);
