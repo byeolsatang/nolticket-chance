@@ -6,436 +6,58 @@
 <title>ノルチケ チャンスメーター</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap');
-:root {
-  --bg:#0a0a0f; --surface:#12121a; --border:#1e1e2e;
-  --accent:#ff3c6e; --accent2:#ffb547; --accent3:#4af0c4;
-  --text:#f0eeff; --muted:#6b6b8a;
-  --safe:#4af0c4; --warn:#ffb547; --danger:#ff3c6e;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Noto Sans JP',sans-serif;
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  padding:32px 16px 60px;
-  background-image:
-    radial-gradient(ellipse at 20% 10%,rgba(255,60,110,0.08) 0%,transparent 50%),
-    radial-gradient(ellipse at 80% 80%,rgba(74,240,196,0.06) 0%,transparent 50%);
-}
-header{text-align:center;margin-bottom:40px;}
-.title-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
-h1{font-size:clamp(26px,6vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1;}
-h1 span{color:var(--accent);}
-.subtitle{margin-top:8px;font-size:13px;color:var(--muted);font-weight:300;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px;width:100%;max-width:480px;margin-bottom:20px;overflow:hidden;}
-.card-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
-.input-row{display:flex;flex-direction:column;gap:12px;}
-label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block;}
-input[type="date"],input[type="time"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 8px;outline:none;transition:border-color 0.2s;color-scheme:dark;min-width:0;}
-input[type="date"]:focus,input[type="time"]:focus{border-color:var(--accent);}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0;}
-.note{font-size:11px;color:var(--muted);line-height:1.7;margin-top:10px;}
-.btn{width:100%;max-width:480px;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:16px;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s,transform 0.1s;margin-bottom:24px;}
-.btn:hover{opacity:0.85;}
-.btn:active{transform:scale(0.98);}
-.result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;width:100%;max-width:480px;display:none;animation:fadeUp 0.4s ease;}
-.result-card.show{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.phase-badge{display:inline-block;padding:4px 14px;border-radius:999px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:16px;}
-.phase-free{background:rgba(74,240,196,0.15);color:var(--safe);border:1px solid var(--safe);}
-.phase-flat{background:rgba(255,181,71,0.12);color:var(--warn);border:1px solid var(--warn);}
-.phase-10{background:rgba(255,181,71,0.18);color:var(--warn);border:1px solid var(--warn);}
-.phase-20{background:rgba(255,90,60,0.15);color:#ff8060;border:1px solid #ff8060;}
-.phase-30{background:rgba(255,60,110,0.18);color:var(--danger);border:1px solid var(--danger);}
-.phase-closed{background:rgba(100,100,130,0.18);color:var(--muted);border:1px solid var(--muted);}
-.result-title{font-size:22px;font-weight:900;margin-bottom:6px;line-height:1.3;}
-.result-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
-.meter-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-.meter-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 14px 12px;}
-.meter-box-label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:8px;}
-.meter-box-score{font-size:36px;font-weight:900;font-family:'Space Mono',monospace;line-height:1;margin-bottom:8px;}
-.meter-box-track{width:100%;height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:4px;}
-.meter-box-fill{height:100%;border-radius:999px;transition:width 0.9s cubic-bezier(0.16,1,0.3,1);}
-.meter-box-sub{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px;}
-.breakdown{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;}
-.breakdown-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-.breakdown-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:9px 0;font-size:12px;color:var(--muted);}
-.breakdown-row:last-child{border-bottom:none;}
-.breakdown-row strong{font-family:'Space Mono',monospace;font-size:15px;color:var(--text);}
-.breakdown-row .boost{color:var(--accent2);}
-.boost-callout{font-size:12px;color:var(--muted);line-height:1.7;padding:12px;background:rgba(255,181,71,0.07);border-left:2px solid var(--accent2);border-radius:4px;margin-top:12px;}
-.zensin-flow{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;}
-.zensin-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px;}
-.zensin-text{font-size:12px;color:var(--muted);line-height:1.7;}
-.zensin-text strong{color:var(--accent3);font-weight:700;}
-.zensin-arrow{display:flex;align-items:center;gap:6px;font-size:11px;font-family:'Space Mono',monospace;color:var(--accent3);margin-top:8px;flex-wrap:wrap;}
-.ztag{background:rgba(74,240,196,0.1);border:1px solid rgba(74,240,196,0.3);border-radius:4px;padding:2px 7px;}
-.zarr{color:var(--muted);font-size:10px;}
-.next-phase-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;}
-.next-phase-label{font-size:11px;color:var(--muted);letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:8px;}
-.next-phase-info{font-size:14px;font-weight:700;color:var(--accent2);}
-.next-phase-date{font-family:'Space Mono',monospace;font-size:13px;color:var(--text);margin-top:4px;}
-.next-phase-days{margin-top:8px;font-size:28px;font-weight:900;font-family:'Space Mono',monospace;color:var(--accent2);line-height:1;}
-.next-phase-days span{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;}
-.timeline{display:flex;flex-direction:column;}
-.tl-item{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);opacity:0.5;transition:opacity 0.2s;}
-.tl-item:last-child{border-bottom:none;}
-.tl-item.active{opacity:1;}
-.tl-item.past{opacity:0.3;}
-.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;background:var(--border);}
-.tl-item.active .tl-dot{background:var(--accent);box-shadow:0 0 8px var(--accent);}
-.tl-item.past .tl-dot{background:var(--muted);}
-.tl-content{flex:1;}
-.tl-fee{font-weight:700;font-size:13px;}
-.tl-date{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px;}
-.seat-hint{font-size:12px;color:var(--muted);line-height:1.7;padding:12px;background:rgba(255,60,110,0.05);border-left:2px solid var(--accent);border-radius:4px;margin-top:16px;}
-.sec-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--accent:#ff3c6e;--accent2:#ffb547;--accent3:#4af0c4;--text:#f0eeff;--muted:#6b6b8a;--safe:#4af0c4;--warn:#ffb547;--danger:#ff3c6e;}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 60px;background-image:radial-gradient(ellipse at 20% 10%,rgba(255,60,110,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(74,240,196,.06) 0%,transparent 50%)}header{text-align:center;margin-bottom:28px}.title-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}h1{font-size:clamp(26px,6vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1}h1 span{color:var(--accent)}.subtitle{margin-top:8px;font-size:13px;color:var(--muted);font-weight:300}.nav-link{display:inline-block;margin-top:18px;padding:9px 16px;border:1px solid rgba(74,240,196,.45);border-radius:999px;color:var(--accent3);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em}.card,.result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:480px}.card{padding:24px 16px;margin-bottom:20px;overflow:hidden}.card-title,.sec-title,.breakdown-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:16px}.input-row{display:flex;flex-direction:column;gap:12px}label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}input[type="date"],input[type="time"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;padding:10px 8px;outline:none;color-scheme:dark;min-width:0}input:focus{border-color:var(--accent)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}.note{font-size:11px;color:var(--muted);line-height:1.7;margin-top:10px}.btn{width:100%;max-width:480px;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer;letter-spacing:1px;margin-bottom:24px}.btn:hover{opacity:.85}.result-card{padding:28px 24px;display:none;animation:fadeUp .4s ease}.result-card.show{display:block}@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.phase-badge{display:inline-block;padding:4px 14px;border-radius:999px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:16px}.phase-free{background:rgba(74,240,196,.15);color:var(--safe);border:1px solid var(--safe)}.phase-flat,.phase-10{background:rgba(255,181,71,.13);color:var(--warn);border:1px solid var(--warn)}.phase-20{background:rgba(255,90,60,.15);color:#ff8060;border:1px solid #ff8060}.phase-30{background:rgba(255,60,110,.18);color:var(--danger);border:1px solid var(--danger)}.phase-closed{background:rgba(100,100,130,.18);color:var(--muted);border:1px solid var(--muted)}.result-title{font-size:22px;font-weight:900;margin-bottom:6px}.result-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}.meter-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}.meter-box,.breakdown,.next-phase-box,.flow-box{background:var(--bg);border:1px solid var(--border);border-radius:12px}.meter-box{padding:14px}.meter-box-label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:8px}.meter-box-score{font-size:36px;font-weight:900;font-family:'Space Mono',monospace;line-height:1;margin-bottom:8px}.meter-box-track{width:100%;height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:4px}.meter-box-fill{height:100%;border-radius:999px;width:0%;transition:width .9s cubic-bezier(.16,1,.3,1)}.meter-box-sub{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px}.breakdown{padding:14px 16px;margin-bottom:20px}.breakdown-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:9px 0;font-size:12px;color:var(--muted)}.breakdown-row:last-child{border-bottom:none}.breakdown-row strong{font-family:'Space Mono',monospace;font-size:15px;color:var(--text)}.boost{color:var(--accent2)!important}.boost-callout,.seat-hint{font-size:12px;color:var(--muted);line-height:1.7;padding:12px;border-radius:4px;margin-top:12px}.boost-callout{background:rgba(255,181,71,.07);border-left:2px solid var(--accent2)}.seat-hint{background:rgba(255,60,110,.05);border-left:2px solid var(--accent)}.flow-box{padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}.flow-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px}.flow-text{font-size:12px;color:var(--muted);line-height:1.7}.flow-text strong{color:var(--accent3)}.flow-tags{display:flex;align-items:center;gap:6px;font-size:11px;font-family:'Space Mono',monospace;color:var(--accent3);margin-top:8px;flex-wrap:wrap}.ztag{background:rgba(74,240,196,.1);border:1px solid rgba(74,240,196,.3);border-radius:4px;padding:2px 7px}.zarr{color:var(--muted);font-size:10px}.next-phase-box{padding:16px;margin-bottom:16px}.next-phase-label{font-size:11px;color:var(--muted);letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:8px}.next-phase-info{font-size:14px;font-weight:700;color:var(--accent2)}.next-phase-date{font-family:'Space Mono',monospace;font-size:13px;color:var(--text);margin-top:4px}.next-phase-days{margin-top:8px;font-size:28px;font-weight:900;font-family:'Space Mono',monospace;color:var(--accent2);line-height:1}.next-phase-days span{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px}.timeline{display:flex;flex-direction:column}.tl-item{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);opacity:.5}.tl-item:last-child{border-bottom:none}.tl-item.active{opacity:1}.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;background:var(--border)}.tl-item.active .tl-dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}.tl-fee{font-weight:700;font-size:13px}.tl-date{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px}
 </style>
 </head>
 <body>
-
 <header>
   <div class="title-label">ノルチケ戦略ツール</div>
   <h1>キャンセル<span>チャンス</span>メーター</h1>
   <p class="subtitle">フェーズ切り替え直前ほど放出圧が上がる</p>
+  <a class="nav-link" href="./readme.html">計算ロジックを見る →</a>
 </header>
 
 <div class="card">
   <div class="card-title">公演情報を入力</div>
   <div class="input-row">
-    <div>
-      <label>公演日</label>
-      <input type="date" id="concert-date">
-    </div>
-    <div class="two-col">
-      <div>
-        <label>チェック日</label>
-        <input type="date" id="check-date">
-      </div>
-      <div>
-        <label>チェック時刻</label>
-        <input type="time" id="check-time">
-      </div>
-    </div>
+    <div><label>公演日</label><input type="date" id="concert-date"></div>
+    <div class="two-col"><div><label>チェック日</label><input type="date" id="check-date"></div><div><label>チェック時刻</label><input type="time" id="check-time"></div></div>
   </div>
   <p class="note">※公演開始時刻は使いません。キャンセル料フェーズは公演日から逆算し、締切は公演前日17:00として判定します。</p>
 </div>
-
 <button class="btn" onclick="calculate()">チャンスを確認する</button>
-
 <div class="result-card" id="result"></div>
 
 <script>
-var MS_DAY = 86400000;
-var MS_HOUR = 3600000;
-
-var PHASES = [
-  { key:'closed', color:'phase-closed', baseChance:0,  label:'終了' },
-  { key:'p30',    color:'phase-30',     baseChance:70, label:'30% フェーズ' },
-  { key:'p20',    color:'phase-20',     baseChance:55, label:'20% フェーズ' },
-  { key:'p10',    color:'phase-10',     baseChance:35, label:'10% フェーズ' },
-  { key:'flat',   color:'phase-flat',   baseChance:15, label:'均一フェーズ' },
-  { key:'free',   color:'phase-free',   baseChance:5,  label:'無料期間' }
-];
-
-function phaseByKey(key) {
-  return PHASES.find(function(p) { return p.key === key; }) || PHASES[0];
-}
-
-function parseLocalDate(dateStr) {
-  var p = dateStr.split('-').map(Number);
-  return new Date(p[0], p[1] - 1, p[2], 0, 0, 0, 0);
-}
-
-function parseLocalDateTime(dateStr, timeStr) {
-  var p = dateStr.split('-').map(Number);
-  var t = (timeStr || '00:00').split(':').map(Number);
-  return new Date(p[0], p[1] - 1, p[2], t[0] || 0, t[1] || 0, 0, 0);
-}
-
-function addDays(date, amount) {
-  var d = new Date(date.getTime());
-  d.setDate(d.getDate() + amount);
-  return d;
-}
-
-function getDaysBefore(concertDate, checkDate) {
-  return Math.round((concertDate - checkDate) / MS_DAY);
-}
-
-function getCancellationDeadline(concertDate) {
-  var d = addDays(concertDate, -1);
-  d.setHours(17, 0, 0, 0);
-  return d;
-}
-
-function getPhase(daysBefore, checkDateTime, deadlineDateTime) {
-  if (checkDateTime > deadlineDateTime || daysBefore <= 0) return phaseByKey('closed');
-  if (daysBefore <= 2) return phaseByKey('p30');
-  if (daysBefore <= 6) return phaseByKey('p20');
-  if (daysBefore <= 9) return phaseByKey('p10');
-  if (daysBefore <= 35) return phaseByKey('flat');
-  return phaseByKey('free');
-}
-
-function getNextPhaseInfo(key, concertDate) {
-  var map = {
-    free:   { key:'flat',   offset:-35, hour:0,  min:0  },
-    flat:   { key:'p10',    offset:-9,  hour:0,  min:0  },
-    p10:    { key:'p20',    offset:-6,  hour:0,  min:0  },
-    p20:    { key:'p30',    offset:-2,  hour:0,  min:0  },
-    p30:    { key:'closed', offset:-1,  hour:17, min:0  }
-  };
-  var info = map[key];
-  if (!info) return null;
-  var date = addDays(concertDate, info.offset);
-  date.setHours(info.hour, info.min, 0, 0);
-  return { key:info.key, date:date };
-}
-
-function getLastMinuteBoost(checkDateTime, nextInfo) {
-  if (!nextInfo || !nextInfo.date || checkDateTime >= nextInfo.date) return 0;
-  var hours = (nextInfo.date - checkDateTime) / MS_HOUR;
-  if (hours <= 1) return 40;
-  if (hours <= 3) return 30;
-  if (hours <= 6) return 20;
-  if (hours <= 12) return 10;
-  return 0;
-}
-
-function getBoostMessage(boost, nextInfo) {
-  if (!nextInfo || boost === 0) {
-    return '次の手数料アップ／締切まではまだ余裕があります。現在はフェーズ基本値を中心に見ています。';
-  }
-  if (boost >= 40) {
-    return '切り替え直前です。損切り判断による在庫放出が最も起こりやすいと仮定しています。';
-  }
-  if (boost >= 30) {
-    return 'かなり直前です。次フェーズに上がる前に手放す動きが出やすい時間帯です。';
-  }
-  if (boost >= 20) {
-    return '直前帯に入っています。手数料アップ前のキャンセル戻りに注意したい時間です。';
-  }
-  return '次フェーズが近づいています。少しずつ直前放出ブーストがかかり始めています。';
-}
-
-function phaseNameFromKey(key) {
-  var map = { free:'無料', flat:'均一 4,000won', p10:'10%', p20:'20%', p30:'30%', closed:'受付終了' };
-  return map[key] || key;
-}
-
-function fmtDate(d) {
-  return d.getFullYear() + '/' +
-    String(d.getMonth()+1).padStart(2,'0') + '/' +
-    String(d.getDate()).padStart(2,'0');
-}
-
-function fmtDateTime(d) {
-  return fmtDate(d) + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-}
-
-function fmtRemaining(from, to) {
-  var diff = to - from;
-  if (diff <= 0) return 'まもなく';
-  var days = Math.floor(diff / MS_DAY);
-  var hours = Math.floor((diff % MS_DAY) / MS_HOUR);
-  var mins = Math.floor((diff % MS_HOUR) / 60000);
-  if (days > 0) return days + '<span>日後</span>';
-  if (hours > 0) return hours + '<span>時間後</span>';
-  return Math.max(mins, 1) + '<span>分後</span>';
-}
-
-function getColor(c) {
-  if (c >= 80) return '#ff3c6e';
-  if (c >= 50) return '#ff8060';
-  if (c >= 25) return '#ffb547';
-  return '#4af0c4';
-}
-
-function el(tag, cls, html, style) {
-  var d = document.createElement(tag);
-  if (cls)   d.className = cls;
-  if (html)  d.innerHTML = html;
-  if (style) d.setAttribute('style', style);
-  return d;
-}
-
-function calculate() {
-  var cds = document.getElementById('concert-date').value;
-  var kds = document.getElementById('check-date').value;
-  var kts = document.getElementById('check-time').value || '00:00';
-
-  if (!cds || !kds) { alert('公演日とチェック日を入力してください'); return; }
-
-  var concertDate = parseLocalDate(cds);
-  var checkDate = parseLocalDate(kds);
-  var checkDateTime = parseLocalDateTime(kds, kts);
-  var deadlineDateTime = getCancellationDeadline(concertDate);
-  var days = getDaysBefore(concertDate, checkDate);
-  var phase = getPhase(days, checkDateTime, deadlineDateTime);
-  var nextInfo = getNextPhaseInfo(phase.key, concertDate);
-  var baseChance = phase.baseChance;
-  var boostChance = phase.key === 'closed' ? 0 : getLastMinuteBoost(checkDateTime, nextInfo);
-  var totalChance = Math.min(100, baseChance + boostChance);
-  var mc = getColor(totalChance);
-
-  var result = document.getElementById('result');
-  result.innerHTML = '';
-  result.classList.add('show');
-
-  result.appendChild(el('div','card-title','分析結果'));
-  result.appendChild(el('div','phase-badge ' + phase.color, phase.label));
-  var daysLabel = days > 0 ? (days + '日前') : (days === 0 ? '当日' : '終了後');
-  result.appendChild(el('div','result-title','公演 ' + daysLabel));
-  result.appendChild(el('div','result-sub','チェック日時: ' + fmtDateTime(checkDateTime) + '　|　公演日: ' + fmtDate(concertDate) + '<br>キャンセル締切: ' + fmtDateTime(deadlineDateTime)));
-
-  var grid = el('div','meter-grid');
-
-  var box1 = el('div','meter-box');
-  box1.appendChild(el('div','meter-box-label','戻り席チャンス'));
-  var sc1 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + mc);
-  sc1.id = 'score-good';
-  box1.appendChild(sc1);
-  var tr1 = el('div','meter-box-track');
-  var fill1 = el('div','meter-box-fill','','width:0%;background:' + mc);
-  fill1.id = 'meter-good';
-  tr1.appendChild(fill1);
-  box1.appendChild(tr1);
-  box1.appendChild(el('div','meter-box-sub','基本フェーズ値に<br>直前放出ブーストを加算'));
-  grid.appendChild(box1);
-
-  var box2 = el('div','meter-box');
-  box2.appendChild(el('div','meter-box-label','直前放出ブースト'));
-  var sc2 = el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:' + getColor(boostChance));
-  sc2.id = 'score-boost';
-  box2.appendChild(sc2);
-  var tr2 = el('div','meter-box-track');
-  var fill2 = el('div','meter-box-fill','','width:0%;background:' + getColor(boostChance));
-  fill2.id = 'meter-boost';
-  tr2.appendChild(fill2);
-  box2.appendChild(tr2);
-  box2.appendChild(el('div','meter-box-sub','次の手数料アップ／<br>締切直前ほど上昇'));
-  grid.appendChild(box2);
-
-  result.appendChild(grid);
-
-  var breakdown = el('div','breakdown');
-  breakdown.appendChild(el('div','breakdown-title','Chance Breakdown'));
-  breakdown.appendChild(el('div','breakdown-row','<span>基本フェーズ値</span><strong>' + baseChance + '%</strong>'));
-  breakdown.appendChild(el('div','breakdown-row','<span>直前放出ブースト</span><strong class="boost">+' + boostChance + '%</strong>'));
-  breakdown.appendChild(el('div','breakdown-row','<span>総合チャンス</span><strong style="color:' + mc + '">' + totalChance + '%</strong>'));
-  breakdown.appendChild(el('div','boost-callout', getBoostMessage(boostChance, nextInfo)));
-  result.appendChild(breakdown);
-
-  var flow = el('div','zensin-flow');
-  flow.appendChild(el('div','zensin-icon','&#9875;&#65039;'));
-  var zt = el('div','zensin-text');
-  zt.innerHTML = '<strong>直前放出ブーストとは？</strong><br>' +
-    '次の手数料アップやキャンセル締切の直前は、代行業者や保有者が損失を避けるために在庫を手放しやすいと仮定しています。' +
-    '<strong style="color:#ff3c6e">この直前帯を、総合チャンスに上乗せして表示します。</strong>';
-  var arrow = el('div','zensin-arrow');
-  ['手数料アップが近づく','損切り判断が起こる','戻り席が出やすくなる'].forEach(function(t, i, arr) {
-    arrow.appendChild(el('span','ztag',t));
-    if (i < arr.length - 1) arrow.appendChild(el('span','zarr','&#8594;'));
-  });
-  zt.appendChild(arrow);
-  flow.appendChild(zt);
-  result.appendChild(flow);
-
-  var npBox = el('div','next-phase-box');
-  if (nextInfo && nextInfo.date > checkDateTime) {
-    npBox.appendChild(el('div','next-phase-label','次のフェーズ切り替えまで'));
-    npBox.appendChild(el('div','next-phase-info','&#8594; ' + phaseNameFromKey(nextInfo.key) + 'フェーズへ'));
-    npBox.appendChild(el('div','next-phase-date', fmtDateTime(nextInfo.date) + ' 〜'));
-    npBox.appendChild(el('div','next-phase-days', fmtRemaining(checkDateTime, nextInfo.date)));
-  } else {
-    npBox.style.opacity = '0.5';
-    npBox.appendChild(el('div','next-phase-label','次のフェーズ'));
-    npBox.appendChild(el('div','next-phase-info','なし（最終フェーズ）'));
-  }
-  result.appendChild(npBox);
-
-  result.appendChild(el('div','sec-title','キャンセルフェーズ タイムライン'));
-  var tl = el('div','timeline');
-  var tlData = [
-    { key:'free',   label:'無料キャンセル',    fee:'無料',         start:-999, end:-36 },
-    { key:'flat',   label:'均一フェーズ開始',  fee:'4,000won/枚',  start:-35,  end:-10 },
-    { key:'p10',    label:'10%フェーズ開始',   fee:'10%',          start:-9,   end:-7  },
-    { key:'p20',    label:'20%フェーズ開始',   fee:'20%',          start:-6,   end:-3  },
-    { key:'p30',    label:'30%フェーズ（直前）',fee:'30%',          start:-2,   end:-1  },
-    { key:'closed', label:'キャンセル締切',     fee:'受付終了',     start:-1,   end:0, deadline:true }
-  ];
-  tlData.forEach(function(item) {
-    var startDate = item.deadline ? deadlineDateTime : addDays(concertDate, item.start);
-    var endText = '';
-    if (item.key === 'free') {
-      endText = fmtDate(addDays(concertDate, item.end)) + 'まで';
-    } else if (item.deadline) {
-      endText = fmtDateTime(deadlineDateTime) + '以降';
-    } else {
-      endText = fmtDate(startDate) + '〜' + fmtDate(addDays(concertDate, item.end));
-    }
-    var isActive = phase.key === item.key;
-    var row = el('div','tl-item' + (isActive ? ' active' : ''));
-    row.appendChild(el('div','tl-dot'));
-    var cnt = el('div','tl-content');
-    cnt.appendChild(el('div','tl-fee', item.fee + ' <span style="font-weight:300;font-size:11px;color:#6b6b8a">' + item.label + '</span>'));
-    cnt.appendChild(el('div','tl-date', endText));
-    row.appendChild(cnt);
-    tl.appendChild(row);
-  });
-  result.appendChild(tl);
-
-  var hints = {
-    free:   'まだ早い。良席放出はフェーズ後半から。次のフェーズが近づくと少しずつ注視度が上がります。',
-    flat:   '均一手数料を避けたい人が動き始める時期。10%フェーズ直前は戻り席に注意。',
-    p10:    'チャンス増加中。20%に上がる直前は、損失を避けたい人のキャンセル判断が出やすい時間帯です。',
-    p20:    '要注意フェーズ。30%に跨ぐ直前は、代行業者や保有者の損切り放出が起こりやすい想定です。',
-    p30:    '直前ピーク！締切前の最終判断で戻りが出やすい時間帯。張り付き推奨。',
-    closed: 'キャンセル受付終了。チャンスなし。'
-  };
-  result.appendChild(el('div','seat-hint', hints[phase.key] || ''));
-
-  setTimeout(function() {
-    document.getElementById('meter-good').style.width = totalChance + '%';
-    document.getElementById('meter-boost').style.width = boostChance + '%';
-    var startTime = performance.now();
-    function countUp(now) {
-      var elapsed = now - startTime;
-      var progress = Math.min(elapsed / 800, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      var valTotal = Math.round(eased * totalChance);
-      var valBoost = Math.round(eased * boostChance);
-      var suffix = '<span style="font-size:16px;font-weight:400">%</span>';
-      document.getElementById('score-good').innerHTML = valTotal + suffix;
-      document.getElementById('score-boost').innerHTML = valBoost + suffix;
-      if (progress < 1) requestAnimationFrame(countUp);
-    }
-    requestAnimationFrame(countUp);
-  }, 100);
-
-  result.scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-(function() {
-  var t = new Date();
-  var date = t.getFullYear() + '-' +
-    String(t.getMonth()+1).padStart(2,'0') + '-' +
-    String(t.getDate()).padStart(2,'0');
-  var time = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
-  document.getElementById('check-date').value = date;
-  document.getElementById('check-time').value = time;
-}());
-
-function downloadHTML() {
-  var html = document.documentElement.outerHTML;
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'noru-ticket.html';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
+var MS_DAY=86400000,MS_HOUR=3600000;
+var PHASES=[{key:'closed',color:'phase-closed',baseChance:0,label:'終了'},{key:'p30',color:'phase-30',baseChance:70,label:'30% フェーズ'},{key:'p20',color:'phase-20',baseChance:55,label:'20% フェーズ'},{key:'p10',color:'phase-10',baseChance:35,label:'10% フェーズ'},{key:'flat',color:'phase-flat',baseChance:15,label:'均一フェーズ'},{key:'free',color:'phase-free',baseChance:5,label:'無料期間'}];
+function phaseByKey(key){return PHASES.find(function(p){return p.key===key})||PHASES[0]}
+function parseLocalDate(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2],0,0,0,0)}
+function parseLocalDateTime(ds,ts){var p=ds.split('-').map(Number),t=(ts||'00:00').split(':').map(Number);return new Date(p[0],p[1]-1,p[2],t[0]||0,t[1]||0,0,0)}
+function addDays(d,a){var x=new Date(d.getTime());x.setDate(x.getDate()+a);return x}
+function getDaysBefore(concertDate,checkDate){return Math.round((concertDate-checkDate)/MS_DAY)}
+function getCancellationDeadline(concertDate){var d=addDays(concertDate,-1);d.setHours(17,0,0,0);return d}
+function getPhase(days,checkDateTime,deadline){if(checkDateTime>deadline||days<=0)return phaseByKey('closed');if(days<=2)return phaseByKey('p30');if(days<=6)return phaseByKey('p20');if(days<=9)return phaseByKey('p10');if(days<=35)return phaseByKey('flat');return phaseByKey('free')}
+function getNextPhaseInfo(key,concertDate){var map={free:{key:'flat',offset:-35,hour:0,min:0},flat:{key:'p10',offset:-9,hour:0,min:0},p10:{key:'p20',offset:-6,hour:0,min:0},p20:{key:'p30',offset:-2,hour:0,min:0},p30:{key:'closed',offset:-1,hour:17,min:0}};var info=map[key];if(!info)return null;var date=addDays(concertDate,info.offset);date.setHours(info.hour,info.min,0,0);return{key:info.key,date:date}}
+function getLastMinuteBoost(checkDateTime,nextInfo){if(!nextInfo||!nextInfo.date||checkDateTime>=nextInfo.date)return 0;var h=(nextInfo.date-checkDateTime)/MS_HOUR;if(h<=1)return 40;if(h<=3)return 30;if(h<=6)return 20;if(h<=12)return 10;return 0}
+function getBoostMessage(boost,nextInfo){if(!nextInfo||boost===0)return'次の手数料アップ／締切まではまだ余裕があります。現在はフェーズ基本値を中心に見ています。';if(boost>=40)return'切り替え直前です。損切り判断による在庫放出が最も起こりやすいと仮定しています。';if(boost>=30)return'かなり直前です。次フェーズに上がる前に手放す動きが出やすい時間帯です。';if(boost>=20)return'直前帯に入っています。手数料アップ前のキャンセル戻りに注意したい時間です。';return'次フェーズが近づいています。少しずつ直前放出ブーストがかかり始めています。'}
+function phaseNameFromKey(key){var map={free:'無料',flat:'均一 4,000won',p10:'10%',p20:'20%',p30:'30%',closed:'受付終了'};return map[key]||key}
+function fmtDate(d){return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')}
+function fmtDateTime(d){return fmtDate(d)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function fmtRemaining(from,to){var diff=to-from;if(diff<=0)return'まもなく';var days=Math.floor(diff/MS_DAY),hours=Math.floor((diff%MS_DAY)/MS_HOUR),mins=Math.floor((diff%MS_HOUR)/60000);if(days>0)return days+'<span>日後</span>';if(hours>0)return hours+'<span>時間後</span>';return Math.max(mins,1)+'<span>分後</span>'}
+function getColor(c){if(c>=80)return'#ff3c6e';if(c>=50)return'#ff8060';if(c>=25)return'#ffb547';return'#4af0c4'}
+function el(tag,cls,html,style){var d=document.createElement(tag);if(cls)d.className=cls;if(html)d.innerHTML=html;if(style)d.setAttribute('style',style);return d}
+function calculate(){var cds=document.getElementById('concert-date').value,kds=document.getElementById('check-date').value,kts=document.getElementById('check-time').value||'00:00';if(!cds||!kds){alert('公演日とチェック日を入力してください');return}var concertDate=parseLocalDate(cds),checkDate=parseLocalDate(kds),checkDateTime=parseLocalDateTime(kds,kts),deadline=getCancellationDeadline(concertDate),days=getDaysBefore(concertDate,checkDate),phase=getPhase(days,checkDateTime,deadline),nextInfo=getNextPhaseInfo(phase.key,concertDate),base=phase.baseChance,boost=phase.key==='closed'?0:getLastMinuteBoost(checkDateTime,nextInfo),total=Math.min(100,base+boost),mc=getColor(total),result=document.getElementById('result');result.innerHTML='';result.classList.add('show');
+result.appendChild(el('div','card-title','分析結果'));result.appendChild(el('div','phase-badge '+phase.color,phase.label));var daysLabel=days>0?(days+'日前'):(days===0?'当日':'終了後');result.appendChild(el('div','result-title','公演 '+daysLabel));result.appendChild(el('div','result-sub','チェック日時: '+fmtDateTime(checkDateTime)+'　|　公演日: '+fmtDate(concertDate)+'<br>キャンセル締切: '+fmtDateTime(deadline)));
+var grid=el('div','meter-grid');[['戻り席チャンス','score-total','meter-total',total,mc,'基本フェーズ値に<br>直前放出ブーストを加算'],['直前放出ブースト','score-boost','meter-boost',boost,getColor(boost),'次の手数料アップ／<br>締切直前ほど上昇']].forEach(function(m){var box=el('div','meter-box');box.appendChild(el('div','meter-box-label',m[0]));var sc=el('div','meter-box-score','0<span style="font-size:16px;font-weight:400">%</span>','color:'+m[4]);sc.id=m[1];box.appendChild(sc);var tr=el('div','meter-box-track'),fill=el('div','meter-box-fill','','background:'+m[4]);fill.id=m[2];tr.appendChild(fill);box.appendChild(tr);box.appendChild(el('div','meter-box-sub',m[5]));grid.appendChild(box)});result.appendChild(grid);
+var breakdown=el('div','breakdown');breakdown.appendChild(el('div','breakdown-title','Chance Breakdown'));breakdown.appendChild(el('div','breakdown-row','<span>基本フェーズ値</span><strong>'+base+'%</strong>'));breakdown.appendChild(el('div','breakdown-row','<span>直前放出ブースト</span><strong class="boost">+'+boost+'%</strong>'));breakdown.appendChild(el('div','breakdown-row','<span>総合チャンス</span><strong style="color:'+mc+'">'+total+'%</strong>'));breakdown.appendChild(el('div','boost-callout',getBoostMessage(boost,nextInfo)));result.appendChild(breakdown);
+var flow=el('div','flow-box');flow.appendChild(el('div','flow-icon','⚓'));var ft=el('div','flow-text','<strong>直前放出ブーストとは？</strong><br>次の手数料アップやキャンセル締切の直前は、代行業者や保有者が損失を避けるために在庫を手放しやすいと仮定しています。<strong style="color:#ff3c6e">この直前帯を、総合チャンスに上乗せして表示します。</strong>');var tags=el('div','flow-tags');['手数料アップが近づく','損切り判断が起こる','戻り席が出やすくなる'].forEach(function(t,i,a){tags.appendChild(el('span','ztag',t));if(i<a.length-1)tags.appendChild(el('span','zarr','→'))});ft.appendChild(tags);flow.appendChild(ft);result.appendChild(flow);
+var np=el('div','next-phase-box');if(nextInfo&&nextInfo.date>checkDateTime){np.appendChild(el('div','next-phase-label','次のフェーズ切り替えまで'));np.appendChild(el('div','next-phase-info','→ '+phaseNameFromKey(nextInfo.key)+'フェーズへ'));np.appendChild(el('div','next-phase-date',fmtDateTime(nextInfo.date)+' 〜'));np.appendChild(el('div','next-phase-days',fmtRemaining(checkDateTime,nextInfo.date)))}else{np.style.opacity='.5';np.appendChild(el('div','next-phase-label','次のフェーズ'));np.appendChild(el('div','next-phase-info','なし（最終フェーズ）'))}result.appendChild(np);
+result.appendChild(el('div','sec-title','キャンセルフェーズ タイムライン'));var tl=el('div','timeline'),tlData=[{key:'free',label:'無料キャンセル',fee:'無料',start:-999,end:-36},{key:'flat',label:'均一フェーズ開始',fee:'4,000won/枚',start:-35,end:-10},{key:'p10',label:'10%フェーズ開始',fee:'10%',start:-9,end:-7},{key:'p20',label:'20%フェーズ開始',fee:'20%',start:-6,end:-3},{key:'p30',label:'30%フェーズ（直前）',fee:'30%',start:-2,end:-1},{key:'closed',label:'キャンセル締切',fee:'受付終了',start:-1,end:0,deadline:true}];tlData.forEach(function(item){var start=item.deadline?deadline:addDays(concertDate,item.start),endText=item.key==='free'?fmtDate(addDays(concertDate,item.end))+'まで':item.deadline?fmtDateTime(deadline)+'以降':fmtDate(start)+'〜'+fmtDate(addDays(concertDate,item.end)),row=el('div','tl-item'+(phase.key===item.key?' active':''));row.appendChild(el('div','tl-dot'));var cnt=el('div','tl-content');cnt.appendChild(el('div','tl-fee',item.fee+' <span style="font-weight:300;font-size:11px;color:#6b6b8a">'+item.label+'</span>'));cnt.appendChild(el('div','tl-date',endText));row.appendChild(cnt);tl.appendChild(row)});result.appendChild(tl);
+var hints={free:'まだ早い。良席放出はフェーズ後半から。次のフェーズが近づくと少しずつ注視度が上がります。',flat:'均一手数料を避けたい人が動き始める時期。10%フェーズ直前は戻り席に注意。',p10:'チャンス増加中。20%に上がる直前は、損失を避けたい人のキャンセル判断が出やすい時間帯です。',p20:'要注意フェーズ。30%に跨ぐ直前は、代行業者や保有者の損切り放出が起こりやすい想定です。',p30:'直前ピーク！締切前の最終判断で戻りが出やすい時間帯。張り付き推奨。',closed:'キャンセル受付終了。チャンスなし。'};result.appendChild(el('div','seat-hint',hints[phase.key]||''));
+setTimeout(function(){document.getElementById('meter-total').style.width=total+'%';document.getElementById('meter-boost').style.width=boost+'%';var st=performance.now();function count(now){var p=Math.min((now-st)/800,1),e=1-Math.pow(1-p,3),vt=Math.round(e*total),vb=Math.round(e*boost),s='<span style="font-size:16px;font-weight:400">%</span>';document.getElementById('score-total').innerHTML=vt+s;document.getElementById('score-boost').innerHTML=vb+s;if(p<1)requestAnimationFrame(count)}requestAnimationFrame(count)},100);result.scrollIntoView({behavior:'smooth',block:'start'})}
+(function(){var t=new Date(),date=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0'),time=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');document.getElementById('check-date').value=date;document.getElementById('check-time').value=time}());
 </script>
 </body>
 </html>
