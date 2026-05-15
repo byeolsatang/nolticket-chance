@@ -34,7 +34,7 @@
 
 <section><h2><span class="num">02</span>入力項目</h2>
 <table><tr><th>項目</th><th>説明</th></tr><tr><td><strong>公演日</strong></td><td>チケット対象の公演日</td></tr><tr><td><strong>チェック日</strong></td><td>いつ時点で判定するかの日付</td></tr><tr><td><strong>チェック時刻</strong></td><td>いつ時点で判定するかの時刻</td></tr></table>
-<div class="note">公演開始時刻は使いません。キャンセル料フェーズは、公演開始時刻ではなく <strong>公演日からの逆算</strong> で判定しています。</div>
+<div class="note">キャンセル料フェーズは、公演開始時刻ではなく <strong>公演日からの逆算</strong> で判定しています。</div>
 </section>
 
 <section><h2><span class="num">03</span>基本の考え方</h2>
@@ -50,7 +50,7 @@
 </section>
 
 <section><h2><span class="num">05</span>キャンセル締切の扱い</h2>
-<p>現在のロジックでは、キャンセル締切を次のように固定しています。</p>
+<p>現在のロジックでは、NOL公式の情報によりキャンセル締切を次のように固定しています。</p>
 <div class="formula">公演前日 17:00</div>
 <p>たとえば、公演日が <strong>2026/06/12</strong> の場合、キャンセル締切は <strong>2026/06/11 17:00</strong> になります。</p>
 <div class="flow"><div>チェック日時 &gt; キャンセル締切</div><span>↓</span><div>キャンセル受付終了</div></div>
@@ -91,7 +91,7 @@
 
 <section><h2><span class="num">11</span>現在の前提</h2>
 <ul class="muted"><li>キャンセル締切は公演前日17:00</li><li>キャンセル料フェーズは公演日からの日数で判定</li><li>公演開始時刻は使わない</li><li>次フェーズ / 締切の直前ほど放出圧が高まる</li></ul>
-<div class="note">実際には公演や販売ページによって、キャンセル締切日時が異なる可能性があります。今後はキャンセル締切日時を手入力できるようにすると、より正確になります。</div>
+<div class="note">実際には公演や販売ページによって、キャンセル締切日時が異なる可能性があります。例外が出た場合アップデートします。</div>
 </section>
 
 <section><h2><span class="num">12</span>注意点</h2>
