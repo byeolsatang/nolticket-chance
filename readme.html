@@ -7,7 +7,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap');
 :root{--bg:#0a0a0f;--surface:#12121a;--surface2:#171725;--border:#25253a;--text:#f3f0ff;--muted:#8b8aa8;--accent:#ff3c6e;--accent2:#ffb547;--accent3:#4af0c4;}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,rgba(255,60,110,.12),transparent 45%),radial-gradient(ellipse at 90% 20%,rgba(74,240,196,.08),transparent 45%),var(--bg);color:var(--text);font-family:'Noto Sans JP',system-ui,sans-serif;line-height:1.85}.page{width:min(920px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.hero,section,.toc{background:rgba(18,18,26,.92);border:1px solid var(--border);border-radius:24px;padding:28px 24px;margin:20px 0}.hero{padding:40px 28px 34px;background:linear-gradient(135deg,rgba(255,60,110,.12),rgba(74,240,196,.05)),var(--surface)}.label{color:var(--accent);font:700 12px 'Space Mono',monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}h1{margin:0;font-size:clamp(30px,6vw,52px);line-height:1.12;letter-spacing:-.04em;font-weight:900}h1 span{color:var(--accent)}h2{margin:0 0 16px;font-size:22px;line-height:1.45}.lead,p{font-size:15px}.lead,.muted,p.sub{color:var(--muted)}strong{color:#fff}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.nav a{display:inline-block;text-decoration:none;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px}.nav a.secondary{background:transparent;color:var(--accent3);border-color:rgba(74,240,196,.45)}.num{display:inline-block;background:rgba(255,60,110,.14);color:var(--accent);border-radius:10px;padding:2px 9px;margin-right:8px;font:800 13px 'Space Mono',monospace}.formula,.flow{background:#08080d;border:1px solid var(--border);border-radius:16px;padding:16px;margin:16px 0;color:var(--accent3);font-family:'Space Mono',monospace;font-size:14px;overflow:auto}.flow{font-family:'Noto Sans JP',sans-serif;color:var(--text);text-align:center}.flow div{background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.18);border-radius:12px;padding:8px 10px;margin:8px 0}.flow span{color:var(--muted)}table{width:100%;border-collapse:collapse;margin:16px 0;border:1px solid var(--border);font-size:14px}th,td{padding:12px 14px;border:1px solid var(--border);vertical-align:top}th{background:rgba(255,60,110,.12);color:#fff;text-align:left}td{background:rgba(10,10,15,.42)}.note{border-left:4px solid var(--accent2);background:rgba(255,181,71,.08);border-radius:12px;padding:14px 16px;margin:16px 0;color:var(--text);font-size:14px}.warn{border-left-color:var(--accent);background:rgba(255,60,110,.08)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:16px}.card small{display:block;color:var(--muted);margin-bottom:6px}.card b{font-size:22px;color:var(--accent);font-family:'Space Mono',monospace}@media(max-width:760px){.cards{grid-template-columns:1fr}.page{width:calc(100% - 24px);padding-top:24px}.hero,section,.toc{border-radius:18px;padding:22px 18px}table{display:block;overflow-x:auto;white-space:nowrap}}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,rgba(255,60,110,.12),transparent 45%),radial-gradient(ellipse at 90% 20%,rgba(74,240,196,.08),transparent 45%),var(--bg);color:var(--text);font-family:'Noto Sans JP',system-ui,sans-serif;line-height:1.85}.page{width:min(920px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.hero,section,.toc{background:rgba(18,18,26,.92);border:1px solid var(--border);border-radius:24px;padding:28px 24px;margin:20px 0}.hero{padding:40px 28px 34px;background:linear-gradient(135deg,rgba(255,60,110,.12),rgba(74,240,196,.05)),var(--surface)}.label{color:var(--accent);font:700 12px 'Space Mono',monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}h1{margin:0;font-size:clamp(30px,6vw,52px);line-height:1.12;letter-spacing:-.04em;font-weight:900}h1 span{color:var(--accent)}h2{margin:0 0 16px;font-size:22px;line-height:1.45}.lead,p{font-size:15px}.lead,.muted,p.sub{color:var(--muted)}strong{color:#fff}.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.nav a{display:inline-block;text-decoration:none;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px}.nav a.secondary{background:transparent;color:var(--accent3);border-color:rgba(74,240,196,.45)}.num{display:inline-block;background:rgba(255,60,110,.14);color:var(--accent);border-radius:10px;padding:2px 9px;margin-right:8px;font:800 13px 'Space Mono',monospace}.formula,.flow{background:#08080d;border:1px solid var(--border);border-radius:16px;padding:16px;margin:16px 0;color:var(--accent3);font-family:'Space Mono',monospace;font-size:14px;overflow:auto}.flow{font-family:'Noto Sans JP',sans-serif;color:var(--text);text-align:center}.flow div{background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.18);border-radius:12px;padding:8px 10px;margin:8px 0}.flow span{display:block;color:var(--muted);line-height:1.4}table{width:100%;border-collapse:collapse;margin:16px 0;border:1px solid var(--border);font-size:14px}th,td{padding:12px 14px;border:1px solid var(--border);vertical-align:top}th{background:rgba(255,60,110,.12);color:#fff;text-align:left}td{background:rgba(10,10,15,.42)}.note{border-left:4px solid var(--accent2);background:rgba(255,181,71,.08);border-radius:12px;padding:14px 16px;margin:16px 0;color:var(--text);font-size:14px}.warn{border-left-color:var(--accent);background:rgba(255,60,110,.08)}ul{margin:12px 0 0;padding-left:1.3em}.footer{text-align:center;font-size:12px;margin-top:34px}@media(max-width:760px){.page{width:calc(100% - 24px);padding-top:24px}.hero,section,.toc{border-radius:18px;padding:22px 18px}table{display:block;overflow-x:auto;white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -15,6 +15,7 @@
 <header class="hero">
 <div class="label">NOL Ticket Strategy Tool</div>
 <h1>ノルチケ<br><span>チャンスメーター</span></h1>
+<p class="lead">計算ロジック説明</p>
 <p class="lead">NOL Ticketのキャンセル料フェーズをもとに、「いつキャンセル戻りが出やすそうか」を可視化するための計算ロジック説明です。チケットを自動取得するものではなく、張り付きどころを整理するための判断補助ツールです。</p>
 <div class="nav"><a href="./index.html">← アプリに戻る</a></div>
 </header>
@@ -22,19 +23,31 @@
 <nav class="toc">
 <h2>Contents</h2>
 <ol class="muted">
-<li>このツールがやっていること</li><li>入力項目</li><li>基本の考え方</li><li>フェーズ判定ロジック</li><li>キャンセル締切</li><li>戻り席チャンス</li><li>直前放出ブースト</li><li>前進（チョンジン）</li><li>注意点</li>
+<li>このツールがやっていること</li>
+<li>入力項目</li>
+<li>基本の考え方</li>
+<li>フェーズ判定ロジック</li>
+<li>キャンセル締切の扱い</li>
+<li>チャンス度の設定</li>
+<li>なぜ後半ほどチャンス度が上がるのか</li>
+<li>良席チャンスと一般席チャンス</li>
+<li>前進（チョンジン）の考え方</li>
+<li>次フェーズ表示</li>
+<li>現在の前提</li>
+<li>注意点</li>
 </ol>
 </nav>
 
 <section><h2><span class="num">01</span>このツールがやっていること</h2>
-<p>このツールは、入力された <strong>公演日</strong> と <strong>チェック日時</strong> をもとに、現在がキャンセル料フェーズのどこにいるかを判定します。</p>
-<p>さらに、現在のフェーズだけでなく、<strong>次の手数料アップやキャンセル締切までの近さ</strong>も加味して、「戻り席チャンス」を表示します。</p>
-<div class="note warn">同じフェーズの中でも、次のフェーズに上がる直前ほど、代行業者や保有者が在庫を手放す可能性が高まる、という考え方を入れています。</div>
+<p>このツールは、入力された <strong>公演日</strong> と <strong>チェック日時</strong> をもとに、現在がキャンセル料フェーズのどこにいるかを判定し、「キャンセル拾いのチャンス度」を表示するツールです。</p>
+<p>目的は、チケットの自動取得ではなく、<strong>キャンセル料が上がるタイミングを可視化し、戻り席が出やすい時期を把握すること</strong>です。</p>
 </section>
 
 <section><h2><span class="num">02</span>入力項目</h2>
+<p>現在の入力項目は以下の3つです。</p>
 <table><tr><th>項目</th><th>説明</th></tr><tr><td><strong>公演日</strong></td><td>チケット対象の公演日</td></tr><tr><td><strong>チェック日</strong></td><td>いつ時点で判定するかの日付</td></tr><tr><td><strong>チェック時刻</strong></td><td>いつ時点で判定するかの時刻</td></tr></table>
-<div class="note">キャンセル料フェーズは、公演開始時刻ではなく <strong>公演日からの逆算</strong> で判定しています。</div>
+<p>公演開始時刻は使いません。</p>
+<div class="note">理由は、キャンセル料フェーズが <strong>公演開始時刻ではなく、公演日からの逆算で決まっている</strong> ためです。</div>
 </section>
 
 <section><h2><span class="num">03</span>基本の考え方</h2>
@@ -42,66 +55,76 @@
 <div class="formula">公演日 - チェック日 = 公演何日前か</div>
 <p>たとえば、公演日が <strong>2026/06/12</strong> で、チェック日が <strong>2026/06/03</strong> の場合、</p>
 <div class="formula">2026/06/12 - 2026/06/03 = 9日前</div>
-<p>この「何日前か」をもとに、現在のキャンセル料フェーズを判定します。</p>
+<p>となります。この「何日前か」をもとに、現在のフェーズを判定します。</p>
 </section>
 
 <section><h2><span class="num">04</span>フェーズ判定ロジック</h2>
-<table><tr><th>公演日までの日数</th><th>フェーズ</th><th>キャンセル料</th></tr><tr><td>36日前以前</td><td>無料期間</td><td>無料</td></tr><tr><td>35日前〜10日前</td><td>均一フェーズ</td><td>4,000won / 枚</td></tr><tr><td>9日前〜7日前</td><td>10%フェーズ</td><td>チケット価格の10%</td></tr><tr><td>6日前〜3日前</td><td>20%フェーズ</td><td>チケット価格の20%</td></tr><tr><td>2日前〜公演前日17:00まで</td><td>30%フェーズ</td><td>チケット価格の30%</td></tr><tr><td>公演前日17:00以降</td><td>終了</td><td>キャンセル受付終了</td></tr></table>
+<p>現在のコードでは、以下のルールでフェーズを判定しています。</p>
+<table><tr><th>公演日までの日数</th><th>フェーズ</th><th>表示</th></tr><tr><td>36日前以前</td><td>無料期間</td><td>無料キャンセル</td></tr><tr><td>35日前〜10日前</td><td>均一フェーズ</td><td>4,000won/枚</td></tr><tr><td>9日前〜7日前</td><td>10%フェーズ</td><td>チケット価格の10%</td></tr><tr><td>6日前〜3日前</td><td>20%フェーズ</td><td>チケット価格の20%</td></tr><tr><td>2日前〜前日17:00まで</td><td>30%フェーズ</td><td>チケット価格の30%</td></tr><tr><td>公演前日17:00以降</td><td>終了</td><td>キャンセル受付終了</td></tr></table>
 </section>
 
 <section><h2><span class="num">05</span>キャンセル締切の扱い</h2>
 <p>現在のロジックでは、NOL公式の情報によりキャンセル締切を次のように固定しています。</p>
 <div class="formula">公演前日 17:00</div>
-<p>たとえば、公演日が <strong>2026/06/12</strong> の場合、キャンセル締切は <strong>2026/06/11 17:00</strong> になります。</p>
+<p>たとえば、公演日が <strong>2026/06/12</strong> の場合、</p>
+<div class="formula">キャンセル締切 = 2026/06/11 17:00</div>
+<p>になります。そのため、チェック日時がこの締切を過ぎていた場合は、日数上はまだ前日であっても、フェーズは <strong>終了</strong> になります。</p>
 <div class="flow"><div>チェック日時 &gt; キャンセル締切</div><span>↓</span><div>キャンセル受付終了</div></div>
 </section>
 
-<section><h2><span class="num">06</span>戻り席チャンスの考え方</h2>
-<p>このツールでは、戻り席チャンスを次の2つに分けて計算しています。</p>
-<div class="formula">戻り席チャンス = 基本フェーズ値 + 直前放出ブースト</div>
-<table><tr><th>フェーズ</th><th>基本フェーズ値</th></tr><tr><td>無料期間</td><td>5%</td></tr><tr><td>均一フェーズ</td><td>15%</td></tr><tr><td>10%フェーズ</td><td>35%</td></tr><tr><td>20%フェーズ</td><td>55%</td></tr><tr><td>30%フェーズ</td><td>70%</td></tr><tr><td>終了</td><td>0%</td></tr></table>
-<div class="note">フェーズごとの一律チャンス度ではなく、基本値を控えめにし、直前帯でブーストがかかる形にしています。</div>
+<section><h2><span class="num">06</span>チャンス度の設定</h2>
+<p>各フェーズには、仮の「チャンス度」を設定しています。</p>
+<table><tr><th>フェーズ</th><th>チャンス度</th></tr><tr><td>無料期間</td><td>5%</td></tr><tr><td>均一フェーズ</td><td>25%</td></tr><tr><td>10%フェーズ</td><td>50%</td></tr><tr><td>20%フェーズ</td><td>75%</td></tr><tr><td>30%フェーズ</td><td>95%</td></tr><tr><td>終了</td><td>0%</td></tr></table>
+<p>これは公式の数値ではありません。</p>
+<div class="note">キャンセル料が上がるにつれて、「損切りで手放す人が増える可能性がある」という仮説にもとづいた、<strong>目安としてのスコア</strong>です。</div>
 </section>
 
-<section><h2><span class="num">07</span>直前放出ブーストとは</h2>
-<p>直前放出ブーストとは、<strong>次の手数料アップ、またはキャンセル締切までの近さ</strong>によって加算されるスコアです。</p>
-<div class="flow"><div>次の手数料アップが近づく</div><span>↓</span><div>損切り判断が起こりやすくなる</div><span>↓</span><div>在庫や保有チケットが放出される</div><span>↓</span><div>戻り席が出やすくなる</div></div>
-<table><tr><th>次フェーズ / 締切まで</th><th>直前放出ブースト</th></tr><tr><td>12時間より前</td><td>+0%</td></tr><tr><td>12時間以内</td><td>+10%</td></tr><tr><td>6時間以内</td><td>+20%</td></tr><tr><td>3時間以内</td><td>+30%</td></tr><tr><td>1時間以内</td><td>+40%</td></tr></table>
+<section><h2><span class="num">07</span>なぜ後半ほどチャンス度が上がるのか</h2>
+<p>このツールでは、次の仮説をもとにしています。</p>
+<div class="flow"><div>キャンセル料が安い</div><span>↓</span><div>まだ保有し続ける人が多い</div><span>↓</span><div>キャンセル料が上がる直前</div><span>↓</span><div>損失を避けたい人がキャンセル判断をしやすい</div><span>↓</span><div>キャンセル締切が近い</div><span>↓</span><div>不要チケットが戻る可能性が高まる</div></div>
+<p>つまり、キャンセル料フェーズが進むほど、戻り席が出やすくなる可能性がある、という考え方です。</p>
 </section>
 
-<section><h2><span class="num">08</span>計算例</h2>
-<p>現在が20%フェーズで、次の30%フェーズまで残り2時間の場合、</p>
-<div class="formula">基本フェーズ値：55%<br>直前放出ブースト：+30%<br>総合チャンス：85%</div>
-<p>30%フェーズでキャンセル締切まで残り1時間以内の場合は、</p>
-<div class="formula">基本フェーズ値：70%<br>直前放出ブースト：+40%<br>総合チャンス：100%</div>
-<div class="note">総合チャンスは最大100%で止めています。これは「必ず取れる」という意味ではなく、注視度が最大に近い、という意味です。</div>
+<section><h2><span class="num">08</span>良席チャンスと一般席チャンス</h2>
+<p>画面では、以下の2種類のチャンスを表示しています。</p>
+<table><tr><th>表示</th><th>意味</th></tr><tr><td><strong>良席チャンス</strong></td><td>良い席がキャンセルで戻る可能性</td></tr><tr><td><strong>一般席チャンス</strong></td><td>前進狙いの人が手放した席を拾える可能性</td></tr></table>
+<p>現時点では、両方とも同じフェーズスコアを使っています。</p>
+<p>つまり、</p>
+<div class="formula">現在のフェーズ = 20%フェーズ<br><br>↓<br><br>良席チャンス 75%<br>一般席チャンス 75%</div>
+<p>のように表示されます。将来的には、良席チャンスと一般席チャンスを別々のスコアに分けることもできます。</p>
 </section>
 
-<section><h2><span class="num">09</span>なぜ「直前」が重要なのか</h2>
-<p>手数料が上がるタイミングは、保有者にとって大きな判断ポイントになります。</p>
-<div class="flow"><div>20%フェーズのままキャンセルする</div><span>↓</span><div>損失は20%</div><span>一方で</span><div>30%フェーズに入ってからキャンセルする</div><span>↓</span><div>損失は30%</div></div>
-<p>この差があるため、次のフェーズに上がる直前には、「今キャンセルした方が損失が少ない」と判断する人が出やすくなります。</p>
-</section>
-
-<section><h2><span class="num">10</span>前進（チョンジン）の考え方</h2>
-<p>キャンセル拾いでは、直接キャンセルされた席だけでなく、「前進」によって戻ってくる席もあります。</p>
+<section><h2><span class="num">09</span>前進（チョンジン）の考え方</h2>
+<p>このツールでは、「前進」もチャンス発生の要素として扱っています。</p>
+<p>前進とは、</p>
 <div class="flow"><div>今より良い席を見つける</div><span>↓</span><div>持っていた席をキャンセルする</div><span>↓</span><div>その席が市場に戻る</div><span>↓</span><div>別の人が拾える</div></div>
-<p>良席そのものが戻るだけではなく、良席を取れた人が手放した「元の席」も、別の人にとってはチャンスになります。</p>
+<p>という動きです。つまり、直接良席が戻るだけでなく、良席を取れた人が手放した「元の席」も、キャンセル拾いの対象になる可能性があります。</p>
+</section>
+
+<section><h2><span class="num">10</span>次フェーズ表示</h2>
+<p>現在のフェーズから、次にどのフェーズへ移るかも表示します。</p>
+<p>例：</p>
+<div class="formula">現在：均一フェーズ<br>次：10%フェーズ<br>切り替え：公演9日前 00:00</div>
+<p>30%フェーズの場合は、次フェーズがキャンセル締切です。</p>
+<div class="formula">現在：30%フェーズ<br>次：受付終了<br>切り替え：公演前日 17:00</div>
 </section>
 
 <section><h2><span class="num">11</span>現在の前提</h2>
-<ul class="muted"><li>キャンセル締切は公演前日17:00</li><li>キャンセル料フェーズは公演日からの日数で判定</li><li>公演開始時刻は使わない</li><li>次フェーズ / 締切の直前ほど放出圧が高まる</li></ul>
-<div class="note">実際には公演や販売ページによって、キャンセル締切日時が異なる可能性があります。例外が出た場合アップデートします。</div>
+<p>現在のロジックは、以下の前提で作っています。</p>
+<ul class="muted"><li>キャンセル締切は公演前日17:00</li><li>キャンセル料フェーズは公演日からの日数で判定</li><li>公演開始時刻は使わない</li></ul>
+<p>ただし、実際には公演や販売ページによって、キャンセル締切日時が異なる可能性があります。</p>
+<div class="note">例外が出た場合アップデートします。そのため、次フェーズでは、<strong>キャンセル締切日時を手入力できるようにする</strong> と、より正確になります。</div>
 </section>
 
 <section><h2><span class="num">12</span>注意点</h2>
-<p>このツールは、NOL Ticket公式の仕様を保証するものではありません。あくまで、表示されているキャンセル料テーブルをもとにした、個人用の観測・判断補助ツールです。</p>
-<p>キャンセル席が実際に出るかどうかは、チケット保有者の行動、販売状況、システム反映タイミングなどに左右されます。</p>
-<div class="note warn">このツールのスコアは「取れる確率」ではなく、<strong>注視すべきタイミングの目安</strong>として扱います。</div>
+<p>このツールは、NOL Ticket公式の仕様を保証するものではありません。</p>
+<p>あくまで、表示されているキャンセル料テーブルをもとにした、個人用の観測・判断補助ツールです。</p>
+<p>また、キャンセル席が実際に出るかどうかは、チケット保有者の行動、販売状況、システム反映タイミングなどに左右されます。</p>
+<div class="note warn">そのため、このツールのスコアは「取れる確率」ではなく、<strong>注視すべきタイミングの目安</strong>として扱います。</div>
 <div class="nav"><a href="./index.html">← アプリに戻る</a></div>
 </section>
 
-<p class="muted" style="text-align:center;font-size:12px;margin-top:34px">NOL Ticket Cancellation Phase Logic / Personal Observation Tool</p>
+<p class="muted footer">NOL Ticket Cancellation Phase Logic / Personal Observation Tool</p>
 </main>
 </body>
 </html>
