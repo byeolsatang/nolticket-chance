@@ -1,5 +1,5 @@
 (function(){
-  var GATE_PASSPHRASE = 'byeolsatang';
+  var GATE_PASSPHRASE = '席こい';
   var GATE_STORAGE_KEY = 'nolticketChanceGatePassedV1';
   var INSTAGRAM_URL = 'https://www.instagram.com/byeolsatang__/';
   var INSTAGRAM_LABEL = 'Instagram @byeolsatang__';
