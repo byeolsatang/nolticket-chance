@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="キャンセル拾いチャンスメーター share image">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="20" x2="1140" y2="620" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#151521"/>
+      <stop offset=".58" stop-color="#0a0a0f"/>
+      <stop offset="1" stop-color="#171725"/>
+    </linearGradient>
+    <linearGradient id="meter" x1="170" y1="400" x2="1045" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4af0c4"/>
+      <stop offset=".45" stop-color="#ffb547"/>
+      <stop offset="1" stop-color="#ff3c6e"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1  0 1 0 0 .22  0 0 1 0 .45  0 0 0 .42 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="180" cy="66" r="184" fill="#ff3c6e" opacity=".13"/>
+  <circle cx="1038" cy="530" r="230" fill="#4af0c4" opacity=".10"/>
+  <rect x="72" y="62" width="1056" height="506" rx="36" fill="#12121a" opacity=".78" stroke="#25253a" stroke-width="2"/>
+  <text x="132" y="142" fill="#ff3c6e" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="28" font-weight="800" letter-spacing="7">NOL TICKET STRATEGY TOOL</text>
+  <text x="132" y="245" fill="#f3f0ff" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="72" font-weight="900">キャンセル拾い</text>
+  <text x="132" y="330" fill="#f3f0ff" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="72" font-weight="900">チャンスメーター</text>
+  <text x="136" y="382" fill="#8b8aa8" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="27" font-weight="500">フェーズ切り替え直前ほど放出圧が上がる</text>
+  <g transform="translate(132 442)">
+    <rect width="662" height="24" rx="12" fill="#25253a"/>
+    <rect width="540" height="24" rx="12" fill="url(#meter)" filter="url(#softGlow)"/>
+    <text x="0" y="68" fill="#4af0c4" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="22" font-weight="800" letter-spacing="3">CHECK THE PHASE SHIFT</text>
+  </g>
+  <g transform="translate(850 140)">
+    <rect width="206" height="206" rx="44" fill="#0a0a0f" stroke="#25253a" stroke-width="2"/>
+    <path d="M48 132a58 58 0 1 1 110 0" fill="none" stroke="#25253a" stroke-width="17" stroke-linecap="round"/>
+    <path d="M48 132a58 58 0 0 1 110 0" fill="none" stroke="url(#meter)" stroke-width="17" stroke-linecap="round" filter="url(#softGlow)"/>
+    <path d="M103 130l39-52" fill="none" stroke="#f3f0ff" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="103" cy="130" r="10" fill="#0a0a0f" stroke="#f3f0ff" stroke-width="6"/>
+    <text x="103" y="174" fill="#f3f0ff" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="33" font-weight="900" text-anchor="middle">NOL</text>
+  </g>
+  <g transform="translate(850 386)">
+    <rect width="206" height="82" rx="22" fill="#0a0a0f" stroke="#25253a" stroke-width="2"/>
+    <text x="103" y="48" fill="#ff3c6e" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="44" font-weight="900" text-anchor="middle">30%</text>
+    <text x="103" y="70" fill="#4af0c4" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="14" font-weight="800" letter-spacing="3" text-anchor="middle">BOOST</text>
+  </g>
+</svg>

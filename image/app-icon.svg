@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="キャンセル拾いチャンスメーター icon">
+  <defs>
+    <linearGradient id="bg" x1="54" y1="46" x2="458" y2="474" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#12121a"/>
+      <stop offset=".56" stop-color="#0a0a0f"/>
+      <stop offset="1" stop-color="#171725"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="88" y1="86" x2="432" y2="436" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff3c6e"/>
+      <stop offset=".52" stop-color="#ffb547"/>
+      <stop offset="1" stop-color="#4af0c4"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.99  0 1 0 0 0.18  0 0 1 0 0.42  0 0 0 .55 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <circle cx="126" cy="92" r="92" fill="#ff3c6e" opacity=".13"/>
+  <circle cx="406" cy="410" r="112" fill="#4af0c4" opacity=".10"/>
+  <path d="M104 322a164 164 0 1 1 305 0" fill="none" stroke="#25253a" stroke-width="44" stroke-linecap="round"/>
+  <path d="M104 322a164 164 0 0 1 305 0" fill="none" stroke="url(#ring)" stroke-width="44" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M256 316l96-126" fill="none" stroke="#f3f0ff" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="256" cy="316" r="26" fill="#0a0a0f" stroke="#f3f0ff" stroke-width="16"/>
+  <text x="256" y="406" fill="#f3f0ff" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="78" font-weight="900" text-anchor="middle">NOL</text>
+  <text x="256" y="444" fill="#4af0c4" font-family="Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="28" font-weight="800" letter-spacing="4" text-anchor="middle">CHANCE</text>
+</svg>

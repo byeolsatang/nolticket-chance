@@ -1,0 +1,23 @@
+{
+  "name": "キャンセル拾いチャンスメーター",
+  "short_name": "チャンスメーター",
+  "description": "NOL Ticketのキャンセル料フェーズをもとに、戻り席が出やすそうなタイミングを可視化します。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff3c6e",
+  "icons": [
+    {
+      "src": "./image/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./image/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
