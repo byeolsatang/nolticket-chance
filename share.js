@@ -10,25 +10,28 @@
     var style = document.createElement('style');
     style.id = 'share-section-style';
     style.textContent = `
-      .share-card{width:100%;max-width:480px;background:linear-gradient(135deg,rgba(74,240,196,.08),rgba(255,60,110,.08)),var(--surface,#12121a);border:1px solid var(--border,#1e1e2e);border-radius:16px;padding:18px 16px;margin:0 0 20px;color:var(--text,#f0eeff);}
-      .page .share-card{max-width:none;margin:20px 0;}
-      .profile-card + .share-card{margin-top:14px;}
-      .share-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent3,#4af0c4);text-transform:uppercase;margin-bottom:8px;font-weight:800;}
-      .share-title{font-size:18px;font-weight:900;line-height:1.45;margin-bottom:6px;}
-      .share-text{font-size:12px;line-height:1.75;color:var(--muted,#6b6b8a);margin:0 0 13px;}
+      .share-card{width:100%;max-width:480px;background:rgba(18,18,26,.52);border:1px solid rgba(74,240,196,.14);border-radius:14px;padding:10px 12px;margin:-10px 0 22px;color:var(--text,#f0eeff);}
+      .page .share-card{max-width:none;margin:18px 0;}
+      .profile-card + .share-card{margin-top:12px;}
+      .share-main{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+      .share-copy-block{min-width:0;flex:1;}
+      .share-kicker{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--accent3,#4af0c4);text-transform:uppercase;margin-bottom:1px;font-weight:800;opacity:.78;}
+      .share-title{font-size:12px;font-weight:800;line-height:1.35;color:var(--muted,#6b6b8a);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+      .share-text{display:none;}
       .share-text a{color:var(--accent3,#4af0c4);font-weight:800;text-decoration:none;}
-      .share-actions{display:flex;gap:8px;flex-wrap:wrap;}
-      .share-actions a,.share-actions button{appearance:none;border:1px solid rgba(74,240,196,.34);background:rgba(74,240,196,.07);color:var(--accent3,#4af0c4);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer;font-family:'Noto Sans JP',system-ui,sans-serif;line-height:1.2;}
-      .share-actions a:first-child{border-color:rgba(255,60,110,.36);background:rgba(255,60,110,.08);color:var(--accent,#ff3c6e);}
-      .share-copy-message{min-height:18px;margin-top:8px;font-size:11px;color:var(--accent2,#ffb547);line-height:1.6;}
-      @media(max-width:520px){.share-card{padding:16px 14px}.share-actions{display:grid;grid-template-columns:1fr 1fr}.share-actions button{grid-column:1 / -1}}
+      .share-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+      .share-actions a,.share-actions button{appearance:none;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(74,240,196,.24);background:rgba(74,240,196,.06);color:var(--accent3,#4af0c4);border-radius:999px;padding:0;font-size:12px;font-weight:900;text-decoration:none;cursor:pointer;font-family:'Space Mono','Noto Sans JP',system-ui,sans-serif;line-height:1;}
+      .share-actions a:first-child{border-color:rgba(255,60,110,.28);background:rgba(255,60,110,.07);color:var(--accent,#ff3c6e);}
+      .share-actions button{font-size:14px;}
+      .share-copy-message{min-height:0;margin-top:5px;font-size:10px;color:var(--accent2,#ffb547);line-height:1.4;}
+      @media(max-width:520px){.share-card{padding:9px 10px;margin:-10px 0 20px}.share-title{font-size:11px}.share-actions{gap:5px}.share-actions a,.share-actions button{width:32px;height:32px;font-size:11px}.share-actions button{font-size:13px}}
     `;
     document.head.appendChild(style);
   }
 
   function buildShareCard(kind){
     var isReadme = kind === 'readme';
-    var title = isReadme ? 'この説明ページをシェアする' : 'このアプリをシェアする';
+    var title = isReadme ? 'この説明ページをシェア' : 'このアプリをシェア';
     var text = isReadme
       ? '計算ロジック説明ページをシェアできます。'
       : 'キャンセル料フェーズから、戻り席チェックの目安を見られるページです。';
@@ -37,7 +40,7 @@
     var card = document.createElement('div');
     card.className = 'share-card';
     card.id = isReadme ? 'readme-share-section' : (kind === 'profile' ? 'profile-share-section' : 'app-share-section');
-    card.innerHTML = '<div class="share-kicker">Share</div><div class="share-title">'+title+'</div><p class="share-text">'+text+' 合言葉は <a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Instagramストーリーズ</a> で定期配信しています。</p><div class="share-actions"><a href="'+xUrl+'" target="_blank" rel="noopener noreferrer">Xでシェア</a><a href="'+threadsUrl+'" target="_blank" rel="noopener noreferrer">Threadsでシェア</a><button type="button" class="share-copy">リンクをコピー</button></div><div class="share-copy-message" aria-live="polite"></div>';
+    card.innerHTML = '<div class="share-main"><div class="share-copy-block"><div class="share-kicker">Share</div><div class="share-title">'+title+'</div><p class="share-text">'+text+' 合言葉は <a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Instagramストーリーズ</a> で定期配信しています。</p></div><div class="share-actions"><a href="'+xUrl+'" target="_blank" rel="noopener noreferrer" aria-label="Xでシェア" title="Xでシェア">𝕏</a><a href="'+threadsUrl+'" target="_blank" rel="noopener noreferrer" aria-label="Threadsでシェア" title="Threadsでシェア">＠</a><button type="button" class="share-copy" aria-label="リンクをコピー" title="リンクをコピー">⛓</button></div></div><div class="share-copy-message" aria-live="polite"></div>';
     card.querySelector('.share-copy').addEventListener('click', function(){ copyLink(APP_SHARE_URL, card.querySelector('.share-copy-message')); });
     return card;
   }
@@ -60,8 +63,8 @@
     }
 
     if (!document.getElementById('app-share-section')) {
-      var infoCard = document.querySelector('body > .card, #gate-protected-content > .card');
-      if (infoCard && infoCard.parentNode) infoCard.parentNode.insertBefore(buildShareCard('app'), infoCard.nextSibling);
+      var actionButton = document.querySelector('button.btn');
+      if (actionButton && actionButton.parentNode) actionButton.parentNode.insertBefore(buildShareCard('app'), actionButton.nextSibling);
     }
 
     if (!document.getElementById('profile-share-section')) {
