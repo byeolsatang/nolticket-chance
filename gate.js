@@ -114,6 +114,16 @@
   function enhanceProtectedContent(){
     overrideProfileCard();
     insertReadmeGateExplanation();
+    loadShareScript();
+  }
+
+  function loadShareScript(){
+    if (document.getElementById('share-script')) return;
+    var script = document.createElement('script');
+    script.id = 'share-script';
+    script.src = './share.js';
+    script.defer = true;
+    document.body.appendChild(script);
   }
 
   function overrideProfileCard(){
