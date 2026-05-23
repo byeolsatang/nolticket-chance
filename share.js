@@ -1,6 +1,8 @@
 (function(){
   var APP_SHARE_URL = 'https://byeolsatang.github.io/nolticket-chance/';
   var SHARE_TEXT = 'キャンセル拾いチャンスメーター｜キャンセル料フェーズから戻り席チェックタイミングを可視化するツール';
+  var X_VIA_ACCOUNT = 'byeolsatang0309';
+  var THREADS_ACCOUNT = '@byeolsatang__';
 
   function addStyle(){
     if (document.getElementById('share-section-style')) return;
@@ -26,8 +28,8 @@
     var text = kind === 'readme'
       ? '合言葉ののれん付きで、計算ロジック説明ページも共有できます。'
       : '合言葉ののれん付きなので、必要な人に気軽にシェアできます。';
-    var xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(APP_SHARE_URL);
-    var threadsUrl = 'https://www.threads.com/intent/post?text=' + encodeURIComponent(SHARE_TEXT + ' ' + APP_SHARE_URL);
+    var xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(APP_SHARE_URL) + '&via=' + encodeURIComponent(X_VIA_ACCOUNT);
+    var threadsUrl = 'https://www.threads.com/intent/post?text=' + encodeURIComponent(SHARE_TEXT + ' ' + APP_SHARE_URL + ' ' + THREADS_ACCOUNT);
     var card = document.createElement('div');
     card.className = 'share-card';
     card.id = kind === 'readme' ? 'readme-share-section' : 'app-share-section';
