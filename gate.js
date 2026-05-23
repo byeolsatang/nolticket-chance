@@ -30,9 +30,6 @@
     .gate-error{min-height:20px;margin-top:10px;color:var(--accent2,#ffb547);font-size:12px;line-height:1.6;}
     .gate-note{margin:16px 0 0;padding-top:16px;border-top:1px solid var(--border,#1e1e2e);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
     #page-profile-card{width:100%;max-width:480px;margin:18px auto 0;}
-    .profile-follow-note{margin-top:10px;padding:11px 12px;border-radius:10px;background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.18);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
-    .profile-follow-note strong{color:var(--accent3,#4af0c4);}
-    .profile-follow-note a{color:var(--accent3,#4af0c4);font-weight:800;text-decoration:none;}
     .gate-explain-list{margin-top:12px;}
     .gate-explain-list li{margin:6px 0;}
     .site-copyright{width:100%;max-width:480px;margin:14px auto 0;padding-top:12px;border-top:1px solid var(--border,#1e1e2e);font-family:'Space Mono',monospace;font-size:10px;color:var(--muted,#6b6b8a);line-height:1.6;text-align:center;}
@@ -133,7 +130,7 @@
     var card = document.createElement('div');
     card.className = 'profile-card';
     card.id = 'page-profile-card';
-    card.innerHTML = '<div class="profile-inner"><div class="profile-avatar"><img src="./image/img-profile.jpg" alt="kira profile"></div><div class="profile-body"><div class="profile-kicker">Created by</div><div class="profile-name">Kira</div><a class="profile-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' ↗</a></div></div><div class="profile-follow-note"><strong>合言葉は定期的に変更します。</strong><br>最新の合言葉は Instagram ストーリーズで配信しています。よければフォローして、必要なタイミングで見にきてください。<br><a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Follow me on Instagram ↗</a></div>';
+    card.innerHTML = '<div class="profile-inner"><div class="profile-avatar"><img src="./image/img-profile.jpg" alt="kira profile"></div><div class="profile-body"><div class="profile-kicker">Created by</div><div class="profile-name">Kira</div><a class="profile-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' ↗</a></div></div>';
     return card;
   }
 
