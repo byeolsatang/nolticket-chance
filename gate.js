@@ -29,6 +29,7 @@
     .gate-btn:hover{opacity:.85;}
     .gate-error{min-height:20px;margin-top:10px;color:var(--accent2,#ffb547);font-size:12px;line-height:1.6;}
     .gate-note{margin:16px 0 0;padding-top:16px;border-top:1px solid var(--border,#1e1e2e);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
+    #page-profile-card{width:100%;max-width:480px;margin:18px auto 0;}
     .profile-follow-note{margin-top:10px;padding:11px 12px;border-radius:10px;background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.18);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
     .profile-follow-note strong{color:var(--accent3,#4af0c4);}
     .profile-follow-note a{color:var(--accent3,#4af0c4);font-weight:800;text-decoration:none;}
