@@ -2,6 +2,7 @@
   var GATE_PASSPHRASE = 'byeolsatang';
   var GATE_STORAGE_KEY = 'nolticketChanceGatePassedV1';
   var INSTAGRAM_URL = 'https://www.instagram.com/byeolsatang__/';
+  var INSTAGRAM_LABEL = 'Instagram @byeolsatang__';
 
   document.documentElement.classList.add('gate-loading');
 
@@ -17,7 +18,7 @@
     .gate-title span{color:var(--accent,#ff3c6e);}
     .gate-lead{font-size:13px;color:var(--muted,#6b6b8a);line-height:1.8;margin:0 0 20px;}
     .gate-follow-box{background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.22);border-radius:14px;padding:13px 14px;margin:0 0 18px;color:var(--text,#f0eeff);}
-    .gate-follow-title{font-size:12px;font-weight:800;color:var(--accent3,#4af0c4);letter-spacing:.08em;margin-bottom:5px;}
+    .gate-follow-title{font-family:'Space Mono',monospace;font-size:11px;font-weight:800;color:var(--accent3,#4af0c4);letter-spacing:.16em;margin-bottom:6px;text-transform:uppercase;}
     .gate-follow-text{font-size:12px;line-height:1.7;color:var(--muted,#6b6b8a);margin:0;}
     .gate-follow-link{display:inline-block;margin-top:9px;color:var(--accent3,#4af0c4);font-size:12px;font-weight:800;text-decoration:none;}
     .gate-input-wrap{position:relative;}
@@ -28,6 +29,11 @@
     .gate-btn:hover{opacity:.85;}
     .gate-error{min-height:20px;margin-top:10px;color:var(--accent2,#ffb547);font-size:12px;line-height:1.6;}
     .gate-note{margin:16px 0 0;padding-top:16px;border-top:1px solid var(--border,#1e1e2e);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
+    .profile-follow-note{margin-top:10px;padding:11px 12px;border-radius:10px;background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.18);font-size:11px;line-height:1.7;color:var(--muted,#6b6b8a);}
+    .profile-follow-note strong{color:var(--accent3,#4af0c4);}
+    .profile-follow-note a{color:var(--accent3,#4af0c4);font-weight:800;text-decoration:none;}
+    .gate-explain-list{margin-top:12px;}
+    .gate-explain-list li{margin:6px 0;}
     @media(max-width:520px){#gate-screen{min-height:calc(100vh - 84px);padding:24px 12px}.gate-card{padding:28px 20px}}
   `;
   document.head.appendChild(style);
@@ -68,11 +74,13 @@
     if (gate) gate.remove();
     if (protectedContent) protectedContent.hidden = false;
     document.documentElement.classList.remove('gate-loading');
+    enhanceProtectedContent();
   }
 
   function buildGate(){
     if (hasPassed()) {
       document.documentElement.classList.remove('gate-loading');
+      enhanceProtectedContent();
       return;
     }
 
@@ -87,7 +95,7 @@
 
     var gate = document.createElement('div');
     gate.id = 'gate-screen';
-    gate.innerHTML = '<div class="gate-card"><div class="gate-label">Limited Access</div><div class="gate-title">合言葉の<br><span>のれん</span></div><p class="gate-lead">このページは、キャンセル料フェーズを観察するための限定公開メモです。合言葉を入力すると中に入れます。</p><div class="gate-follow-box"><div class="gate-follow-title">FOLLOW ME</div><p class="gate-follow-text">合言葉は定期的に変更します。最新の合言葉は Instagram ストーリーズで配信しています。</p><a class="gate-follow-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Instagram @byeolsatang__ をフォローする ↗</a></div><div class="gate-input-wrap"><label for="gate-pass">合言葉</label><input class="gate-input" type="password" id="gate-pass" autocomplete="current-password" placeholder="合言葉を入力"></div><button class="gate-btn" type="button" id="gate-submit">入室する</button><div class="gate-error" id="gate-error" aria-live="polite"></div><p class="gate-note">※これはURLだけでそのまま使われることを避けるための軽い入口です。強いセキュリティではありません。</p></div>';
+    gate.innerHTML = '<div class="gate-card"><div class="gate-label">Limited Access</div><div class="gate-title">合言葉の<br><span>のれん</span></div><p class="gate-lead">このページは、キャンセル料フェーズを観察するための限定公開メモです。合言葉を入力すると中に入れます。</p><div class="gate-follow-box"><div class="gate-follow-title">FOLLOW ME</div><p class="gate-follow-text">合言葉は定期的に変更します。最新の合言葉は Instagram ストーリーズで配信しています。</p><a class="gate-follow-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' をフォローする ↗</a></div><div class="gate-input-wrap"><label for="gate-pass">合言葉</label><input class="gate-input" type="password" id="gate-pass" autocomplete="current-password" placeholder="合言葉を入力"></div><button class="gate-btn" type="button" id="gate-submit">入室する</button><div class="gate-error" id="gate-error" aria-live="polite"></div><p class="gate-note">※これはURLだけでそのまま使われることを避けるための軽い入口です。強いセキュリティではありません。</p></div>';
 
     body.appendChild(gate);
     body.appendChild(protectedContent);
@@ -101,6 +109,43 @@
     }
 
     document.documentElement.classList.remove('gate-loading');
+  }
+
+  function enhanceProtectedContent(){
+    overrideProfileCard();
+    insertReadmeGateExplanation();
+  }
+
+  function overrideProfileCard(){
+    if (typeof window.buildProfileCard !== 'function') return;
+    if (window.__profileCardEnhanced) return;
+    window.__profileCardEnhanced = true;
+
+    window.buildProfileCard = function(){
+      var card = document.createElement('div');
+      card.className = 'profile-card';
+      card.innerHTML = '<div class="profile-inner"><div class="profile-avatar"><img src="./image/img-profile.jpg" alt="kira profile"></div><div class="profile-body"><div class="profile-kicker">Created by</div><div class="profile-name">Kira</div><a class="profile-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' ↗</a></div></div><div class="profile-follow-note"><strong>合言葉は定期的に変更します。</strong><br>最新の合言葉は Instagram ストーリーズで配信しています。よければフォローして、必要なタイミングで見にきてください。<br><a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Follow me on Instagram ↗</a></div><div class="copyright">© byeolsatang. Personal observation tool. Not affiliated with NOL Ticket.</div>';
+      return card;
+    };
+  }
+
+  function insertReadmeGateExplanation(){
+    if (!/readme\.html$/i.test(location.pathname)) return;
+    if (document.getElementById('gate-explanation-section')) return;
+
+    var footer = document.querySelector('.footer');
+    var page = document.querySelector('.page');
+    if (!page) return;
+
+    var section = document.createElement('section');
+    section.id = 'gate-explanation-section';
+    section.innerHTML = '<h2><span class="num">13</span>合言葉ののれんについて</h2><p>このページとアプリ本体には、簡易的な「合言葉ののれん」を設置しています。</p><p>これは強いセキュリティを目的としたものではありません。URLにたどり着いただけの人が、そのまま内容を読んだり使ったりできる状態を避けるための、軽い入口です。</p><ul class="muted gate-explain-list"><li>合言葉は定期的に変更します。</li><li>最新の合言葉は Instagram ストーリーズで配信しています。</li><li>ツールを使いたい方は、<a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer" style="color:var(--accent3);font-weight:800;text-decoration:none;">'+INSTAGRAM_LABEL+'</a> をフォローして最新案内を確認してください。</li></ul><div class="note">この「のれん」は、完全に隠すための鍵ではなく、発信を見てくれている人に向けて入口を少しだけ絞るための仕組みです。</div>';
+
+    if (footer) {
+      page.insertBefore(section, footer);
+    } else {
+      page.appendChild(section);
+    }
   }
 
   window.NolTicketGate = {
