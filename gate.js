@@ -34,6 +34,7 @@
     .profile-follow-note a{color:var(--accent3,#4af0c4);font-weight:800;text-decoration:none;}
     .gate-explain-list{margin-top:12px;}
     .gate-explain-list li{margin:6px 0;}
+    .site-copyright{width:100%;max-width:480px;margin:14px auto 0;padding-top:12px;border-top:1px solid var(--border,#1e1e2e);font-family:'Space Mono',monospace;font-size:10px;color:var(--muted,#6b6b8a);line-height:1.6;text-align:center;}
     @media(max-width:520px){#gate-screen{min-height:calc(100vh - 84px);padding:24px 12px}.gate-card{padding:28px 20px}}
   `;
   document.head.appendChild(style);
@@ -113,6 +114,7 @@
 
   function enhanceProtectedContent(){
     overrideProfileCard();
+    insertPersistentProfileFooter();
     insertReadmeGateExplanation();
     loadShareScript();
   }
@@ -126,16 +128,38 @@
     document.body.appendChild(script);
   }
 
+  function createProfileCard(){
+    var card = document.createElement('div');
+    card.className = 'profile-card';
+    card.id = 'page-profile-card';
+    card.innerHTML = '<div class="profile-inner"><div class="profile-avatar"><img src="./image/img-profile.jpg" alt="kira profile"></div><div class="profile-body"><div class="profile-kicker">Created by</div><div class="profile-name">Kira</div><a class="profile-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' ↗</a></div></div><div class="profile-follow-note"><strong>合言葉は定期的に変更します。</strong><br>最新の合言葉は Instagram ストーリーズで配信しています。よければフォローして、必要なタイミングで見にきてください。<br><a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Follow me on Instagram ↗</a></div>';
+    return card;
+  }
+
+  function insertPersistentProfileFooter(){
+    if (/readme\.html$/i.test(location.pathname)) return;
+    if (document.getElementById('page-profile-card')) return;
+
+    var result = document.getElementById('result');
+    if (!result || !result.parentNode) return;
+
+    var profile = createProfileCard();
+    result.parentNode.insertBefore(profile, result.nextSibling);
+
+    var copyright = document.createElement('div');
+    copyright.className = 'site-copyright';
+    copyright.id = 'site-copyright';
+    copyright.textContent = '© byeolsatang. Personal observation tool. Not affiliated with NOL Ticket.';
+    profile.parentNode.insertBefore(copyright, profile.nextSibling);
+  }
+
   function overrideProfileCard(){
     if (typeof window.buildProfileCard !== 'function') return;
     if (window.__profileCardEnhanced) return;
     window.__profileCardEnhanced = true;
 
     window.buildProfileCard = function(){
-      var card = document.createElement('div');
-      card.className = 'profile-card';
-      card.innerHTML = '<div class="profile-inner"><div class="profile-avatar"><img src="./image/img-profile.jpg" alt="kira profile"></div><div class="profile-body"><div class="profile-kicker">Created by</div><div class="profile-name">Kira</div><a class="profile-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">'+INSTAGRAM_LABEL+' ↗</a></div></div><div class="profile-follow-note"><strong>合言葉は定期的に変更します。</strong><br>最新の合言葉は Instagram ストーリーズで配信しています。よければフォローして、必要なタイミングで見にきてください。<br><a href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener noreferrer">Follow me on Instagram ↗</a></div><div class="copyright">© byeolsatang. Personal observation tool. Not affiliated with NOL Ticket.</div>';
-      return card;
+      return document.createTextNode('');
     };
   }
 
